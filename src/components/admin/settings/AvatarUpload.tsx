@@ -39,11 +39,9 @@ export default function AvatarUpload() {
       setLoading(true);
 
       const avatarUrl =
-        await profileService.uploadAvatar(file);
+  await profileService.updateAvatar(file);
 
-      await profileService.updateAvatar(avatarUrl);
-
-      setAvatar(avatarUrl);
+setAvatar(avatarUrl);
 
       alert("Foto profil berhasil diperbarui.");
     } catch (error) {
