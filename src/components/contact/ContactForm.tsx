@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { messageService } from "@/lib/messageService";
-import { useSearchParams } from "next/navigation";
+
 
 import {
     User,
@@ -43,10 +43,7 @@ customMaterial: "",
         ? `Halo, saya ingin berkonsultasi mengenai produk "${productName}".`
         : "",
 });
-const searchParams = useSearchParams();
 
-const source =
-  searchParams.get("source");
 
     function handleChange(
         e: React.ChangeEvent<
