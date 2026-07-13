@@ -40,7 +40,7 @@ export default function Hero() {
 
             {/* Heading */}
             <h1 className="mt-8 text-5xl font-bold leading-tight text-white lg:text-7xl">
-              Gorden Premium
+              Gorden Prem
               <span className="block text-amber-400">
                 untuk Rumah yang Lebih Elegan
               </span>
