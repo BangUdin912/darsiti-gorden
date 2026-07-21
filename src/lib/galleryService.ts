@@ -2,6 +2,8 @@ import { supabase } from "@/lib/supabaseClient";
 import { storageService } from "./storage";
 import type { GalleryItem } from "@/types/gallery";
 
+const BUCKET = "gallery";
+
 /**
  * =========================
  * HELPER
@@ -80,7 +82,7 @@ const galleryService = {
       return [];
     }
 
-    return data ?? [];
+    return (data ?? []).map(mapGallery);
   },
 
   /**
@@ -105,34 +107,49 @@ const galleryService = {
       return [];
     }
 
-    return data ?? [];
+    return (data ?? []).map(mapGallery);
   },
 
   /**
    * GET FEATURED
    */
-  async getFeatured(
+async getFeatured(
   limit = 6
 ): Promise<GalleryItem[]> {
 
-  const { data, error } = await supabase
+  const {
+    data,
+    error,
+  } = await supabase
     .from("gallery")
     .select("*")
-    .eq("featured", true)
-    .order("created_at", {
-      ascending: false,
-    })
+    .eq(
+      "featured",
+      true
+    )
+    .order(
+      "created_at",
+      {
+        ascending: false,
+      }
+    )
     .limit(limit);
 
+
   if (error) {
+
     console.error(
       "[galleryService.getFeatured]",
       error.message
     );
+
     return [];
+
   }
 
-  return data ?? [];
+
+  return (data ?? []).map(mapGallery);
+
 },
 
   /**
@@ -154,10 +171,7 @@ const galleryService = {
   /**
    * GET ACTIVE
    */
-  async getActive(
-  limit = 50
-): Promise<GalleryItem[]> {
-
+async getActive(limit = 50) {
   const { data, error } = await supabase
     .from("gallery")
     .select("*")
@@ -167,14 +181,11 @@ const galleryService = {
     .limit(limit);
 
   if (error) {
-    console.error(
-      "[galleryService.getActive]",
-      error.message
-    );
+    console.error(error);
     return [];
   }
 
-  return data ?? [];
+  return (data ?? []).map(mapGallery);
 },
 
   /**
@@ -183,7 +194,6 @@ const galleryService = {
 async getBySlug(
   slug: string
 ): Promise<GalleryItem | null> {
-
   const { data, error } = await supabase
     .from("gallery")
     .select("*")
@@ -195,11 +205,10 @@ async getBySlug(
       "[galleryService.getBySlug]",
       error.message
     );
-
     return null;
   }
 
-  return data;
+  return data ? mapGallery(data) : null;
 },
 
   /**
@@ -222,7 +231,7 @@ async getBySlug(
       return null;
     }
 
-    return data;
+    return data ? mapGallery(data) : null;
   },
 
   /**
@@ -258,57 +267,56 @@ async getBySlug(
       throw error;
     }
 
-    return data;
+return mapGallery(data);
   },
 
   /**
    * UPDATE
    */
   async update(
-    id: string,
-    item: Partial<
-      Omit<
-        GalleryItem,
-        "id" | "created_at" | "updated_at"
-      >
+  id: string,
+  item: Partial<
+    Omit<
+      GalleryItem,
+      "id" | "created_at" | "updated_at"
     >
-  ): Promise<GalleryItem> {
-    const payload: Partial<GalleryItem> = {
-      ...item,
-    };
+  >
+): Promise<GalleryItem> {
 
-    if (item.title) {
-      const current =
-        await galleryService.getById(id);
+  const current = await this.getById(id);
 
-      if (
-        current &&
-        current.title !== item.title
-      ) {
-        payload.slug =
-          await generateUniqueSlug(
-            item.title
-          );
-      }
-    }
+  if (!current) {
+    throw new Error("Gallery tidak ditemukan.");
+  }
 
-    const { data, error } = await supabase
-      .from("gallery")
-      .update(payload)
-      .eq("id", id)
-      .select()
-      .single();
+  const payload = {
+    ...item,
+    updated_at: new Date().toISOString(),
+  } as Partial<GalleryItem>;
 
-    if (error) {
-      console.error(
-        "[galleryService.update]",
-        error
-      );
-      throw error;
-    }
+  if (
+    item.title &&
+    item.title !== current.title
+  ) {
+    payload.slug = await generateUniqueSlug(
+      item.title
+    );
+  }
 
-    return data;
-  },
+  const { data, error } = await supabase
+    .from("gallery")
+    .update(payload)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("[gallery.update]", error);
+    throw error;
+  }
+
+  return mapGallery(data);
+},
 
   /**
    * COUNT
@@ -336,30 +344,212 @@ async getBySlug(
    * DELETE
    */
   async delete(id: string): Promise<void> {
-    const gallery =
-      await galleryService.getById(id);
+  const gallery = await this.getById(id);
 
-    if (!gallery) return;
+  if (!gallery) return;
 
-    const { error } = await supabase
-      .from("gallery")
-      .delete()
-      .eq("id", id);
+  if (gallery.image_path) {
+    await this.deleteImage(gallery.image_path);
+  }
 
-    if (error) {
-      console.error(
-        "[galleryService.delete]",
-        error
-      );
-      throw error;
-    }
+  const { error } = await supabase
+    .from("gallery")
+    .delete()
+    .eq("id", id);
 
-    if (gallery.image_path?.trim()) {
-      await storageService.remove(
-        gallery.image_path
-      );
-    }
-  },
+  if (error) {
+    console.error("[gallery.delete]", error);
+    throw error;
+  }
+},
+
+async uploadImage(file: File): Promise<{
+  url: string;
+  path: string;
+}> {
+
+  const ext = file.name
+    .split(".")
+    .pop()
+    ?.toLowerCase();
+
+  if (!ext) {
+    throw new Error("Format gambar tidak valid.");
+  }
+
+  const allowed = [
+    "jpg",
+    "jpeg",
+    "png",
+    "webp",
+  ];
+
+  if (!allowed.includes(ext)) {
+    throw new Error(
+      "Format gambar harus JPG, PNG, atau WEBP."
+    );
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    throw new Error(
+      "Ukuran gambar maksimal 5MB."
+    );
+  }
+
+  const path =
+    `${Date.now()}-${Math.random()
+      .toString(36)
+      .substring(2)}.${ext}`;
+
+  const { error } = await supabase.storage
+    .from(BUCKET)
+    .upload(path, file);
+
+  if (error) {
+    console.error("[gallery.uploadImage]", error);
+    throw error;
+  }
+
+  const { data } = supabase.storage
+    .from(BUCKET)
+    .getPublicUrl(path);
+
+  return {
+    url: data.publicUrl,
+    path,
+  };
+},
+
+  async getRelated(
+  category: string,
+  slug: string,
+  limit = 6
+): Promise<GalleryItem[]> {
+
+  const { data, error } = await supabase
+    .from("gallery")
+    .select("*")
+    .eq("category", category)
+    .neq("slug", slug)
+    .order("created_at", {
+      ascending: false,
+    })
+    .limit(limit);
+
+
+  if (error) {
+    console.error(
+      "[gallery.getRelated]",
+      error
+    );
+
+    return [];
+  }
+
+
+  return (data ?? []).map(mapGallery);
+},
+
+async deleteImage(path: string) {
+  if (!path) return;
+
+  const { error } = await supabase.storage
+    .from(BUCKET)
+    .remove([path]);
+
+  if (error) {
+    console.error(
+      "[gallery.deleteImage]",
+      error
+    );
+    throw error;
+  }
+},
+
+async search(
+  keyword: string
+): Promise<GalleryItem[]> {
+
+  const query = keyword.trim();
+
+  if (!query) return [];
+
+
+  const { data, error } = await supabase
+    .from("gallery")
+    .select("*")
+    .or(
+      [
+        `title.ilike.%${query}%`,
+        `description.ilike.%${query}%`,
+        `location.ilike.%${query}%`,
+        `category.ilike.%${query}%`,
+      ].join(",")
+    )
+    .order(
+      "created_at",
+      {
+        ascending:false,
+      }
+    )
+    .limit(10);
+
+
+  if (error) {
+
+    console.error(
+      "[gallery.search]",
+      error
+    );
+
+    return [];
+
+  }
+
+
+  return (data ?? []).map(mapGallery);
+},
 };
+type GalleryRow = {
+  id: string;
+  slug: string;
+  title: string;
+  description: string | null;
+  category: string | null;
+  image: string | null;
+  image_path: string | null;
+  location: string | null;
+  featured: boolean | null;
+  created_at: string;
+  updated_at: string;
+};
+
+function mapGallery(row: GalleryRow): GalleryItem {
+  const image =
+    row.image_path
+      ? supabase.storage
+          .from(BUCKET)
+          .getPublicUrl(row.image_path)
+          .data.publicUrl
+      : "/images/no-image.png";
+
+  return {
+    id: row.id,
+    slug: row.slug,
+    title: row.title,
+    description: row.description ?? "",
+    category: row.category ?? "",
+    location: row.location ?? "",
+
+    image,
+    image_path: row.image_path ?? "",
+
+    featured: row.featured ?? false,
+
+
+    created_at: row.created_at,
+    updated_at: row.updated_at,
+  };
+}
 
 export { galleryService };

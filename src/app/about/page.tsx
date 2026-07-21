@@ -1,22 +1,39 @@
-import Hero from "src/components/about/Hero";
-import CompanyStory from "src/components/about/CompanyStory";
+import PageHeader from "@/components/common/PageHeader";
 
-import VisionMission from "src/components/about/VisionMission";
-import Values from "src/components/about/Values";
-import WorkProcess from "src/components/about/WorkProcess";
-import Coverage from "src/components/about/Coverage";
+import CompanyStory from "@/components/about/CompanyStory";
+import VisionMission from "@/components/about/VisionMission";
+import Values from "@/components/about/Values";
+import WorkProcess from "@/components/about/WorkProcess";
+import Coverage from "@/components/about/Coverage";
+import CTA from "@/components/about/CTA";
 
-import CTA from "src/components/about/CTA";
+export const metadata = {
+  title: "Tentang Kami | Darsiti Gorden",
+  description:
+    "Mengenal lebih dekat Darsiti Gorden sebagai penyedia gorden custom berkualitas untuk rumah, kantor, hotel, apartemen, dan berbagai proyek interior di Purwokerto.",
+};
 
 export default function AboutPage() {
   return (
     <>
-      <Hero />
+      <PageHeader
+        title="Tentang Darsiti Gorden"
+        description="Mengenal lebih dekat Darsiti Gorden sebagai penyedia gorden custom berkualitas untuk rumah, kantor, hotel, apartemen, dan berbagai proyek interior di Purwokerto."
+        breadcrumb={[
+          {
+            label: "Tentang Kami",
+          },
+        ]}
+      />
+
       <CompanyStory />
 
       <VisionMission />
+
       <Values />
+
       <WorkProcess />
+
       <Coverage />
 
       <CTA />

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Badge from "@/components/common/Badge";
 import {
   CheckCircle2,
   Award,
@@ -61,9 +62,13 @@ export default function CompanyStory() {
           {/* Content */}
           <div>
 
-            <span className="inline-flex rounded-full bg-yellow-100 px-4 py-1 text-sm font-semibold text-yellow-700">
-              Tentang Darsiti Gorden
-            </span>
+            <div className="flex flex-wrap gap-3">
+
+  <Badge variant="warning">
+    Tentang Darsiti Gorden
+  </Badge>
+
+</div>
 
             <h2 className="mt-6 text-4xl font-bold leading-tight md:text-5xl">
               Menghadirkan Gorden Berkualitas untuk

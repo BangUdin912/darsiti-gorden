@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 
-import Sidebar from "@/components/admin/layout/Sidebar";
-import Header from "@/components/admin/layout/Header";
+import AdminShell from "@/components/admin/layout/AdminShell";
 
 import { createClient } from "@/lib/supabase/server";
 
@@ -11,11 +10,13 @@ export const metadata: Metadata = {
   description: "Dashboard Admin Darsiti Gorden",
 };
 
+interface Props {
+  children: React.ReactNode;
+}
+
 export default async function AdminLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}: Props) {
   const supabase = await createClient();
 
   const {
@@ -27,32 +28,10 @@ export default async function AdminLayout({
     redirect("/login");
   }
 
-  // (Opsional) Hanya email tertentu yang boleh menjadi admin
+  // Opsional: hanya admin tertentu
   // if (user.email !== "admin@darsitigorden.com") {
   //   redirect("/login");
   // }
 
-  return (
-    <div className="min-h-screen bg-stone-100">
-      <div className="flex">
-
-        {/* Sidebar */}
-        <Sidebar />
-
-        {/* Content */}
-        <div className="flex min-h-screen flex-1 flex-col">
-
-          {/* Header */}
-          <Header />
-
-          {/* Main */}
-          <main className="flex-1 p-6 lg:p-8">
-            {children}
-          </main>
-
-        </div>
-
-      </div>
-    </div>
-  );
+  return <AdminShell>{children}</AdminShell>;
 }

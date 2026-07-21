@@ -1,20 +1,53 @@
-import { createClient } from "@supabase/supabase-js";
-
+import { supabase } from "@/lib/supabaseClient";
+const BUCKET = "material-images";
 import type {
   Material,
   CreateMaterial,
   UpdateMaterial,
 } from "@/types/material";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+function createSlug(text: string) {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+}
+
+async function generateUniqueSlug(
+  name: string
+): Promise<string> {
+  const baseSlug = createSlug(name);
+
+  const { data } = await supabase
+    .from("materials")
+    .select("slug")
+    .ilike("slug", `${baseSlug}%`);
+
+  const slugs = (data ?? []).map(item => item.slug);
+
+  if (!slugs.includes(baseSlug)) {
+    return baseSlug;
+  }
+
+  let index = 1;
+  let slug = `${baseSlug}-${index}`;
+
+  while (slugs.includes(slug)) {
+    index++;
+    slug = `${baseSlug}-${index}`;
+  }
+
+  return slug;
+}
 
 export const materialService = {
   /**
    * GET ALL
    */
+
+  
   async getAll(): Promise<Material[]> {
     const { data, error } = await supabase
       .from("materials")
@@ -55,7 +88,10 @@ export const materialService = {
       .from("materials")
       .select("*")
       .eq("featured", true)
-      .eq("is_active", true);
+.eq("is_active", true)
+.order("created_at", {
+    ascending: false,
+});
 
     if (error) {
       console.error(error);
@@ -117,53 +153,151 @@ export const materialService = {
   /**
    * CREATE
    */
-  async create(payload: CreateMaterial): Promise<Material> {
-    const { data, error } = await supabase
-      .from("materials")
-      .insert(mapPayload(payload))
-      .select()
-      .single();
+async create(payload: CreateMaterial): Promise<Material> {
+  const slug = await generateUniqueSlug(payload.name);
 
-    if (error) throw new Error(error.message);
+  const { data, error } = await supabase
+    .from("materials")
+    .insert({
+      ...mapPayload(payload),
+      slug,
+    })
+    .select()
+    .single();
 
-    return mapMaterial(data);
-  },
+  if (error) throw error;
+
+  return mapMaterial(data);
+},
 
   /**
    * UPDATE
    */
-  async update(
-    id: string,
-    payload: UpdateMaterial
-  ): Promise<Material> {
-    const { data, error } = await supabase
-      .from("materials")
-      .update({
-        ...mapPayload(payload),
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", id)
-      .select()
-      .single();
+async update(
+  id: string,
+  payload: UpdateMaterial
+): Promise<Material> {
+  const current = await this.getById(id);
 
-    if (error) throw new Error(error.message);
+  if (!current) {
+    throw new Error("Material tidak ditemukan.");
+  }
 
-    return mapMaterial(data);
-  },
+  const updateData = {
+    ...mapPayload(payload),
+    updated_at: new Date().toISOString(),
+  } as Partial<Material>;
+
+  if (
+    payload.name &&
+    payload.name !== current.name
+  ) {
+    updateData.slug = await generateUniqueSlug(
+      payload.name
+    );
+  }
+
+  const { data, error } = await supabase
+    .from("materials")
+    .update(updateData)
+    .eq("id", id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("[material.update]", error);
+    throw error;
+  }
+
+  return mapMaterial(data);
+},
 
   /**
    * DELETE
    */
-  async delete(id: string): Promise<boolean> {
-    const { error } = await supabase
-      .from("materials")
-      .delete()
-      .eq("id", id);
+async delete(id: string): Promise<boolean> {
+  const material = await this.getById(id);
 
-    if (error) throw new Error(error.message);
+  if (!material) return false;
 
-    return true;
-  },
+  if (
+    material.image &&
+    material.image.includes("/material-images/")
+  ) {
+    const path = decodeURIComponent(
+      material.image.split("/material-images/")[1]
+    );
+
+    if (path) {
+      await supabase.storage
+        .from(BUCKET)
+        .remove([path]);
+    }
+  }
+
+  const { error } = await supabase
+    .from("materials")
+    .delete()
+    .eq("id", id);
+
+  if (error) throw error;
+
+  return true;
+},
+
+async uploadImage(file: File): Promise<{
+  url: string;
+  path: string;
+}> {
+
+  const ext = file.name
+    .split(".")
+    .pop()
+    ?.toLowerCase();
+
+  if (!ext) {
+    throw new Error("Format gambar tidak valid.");
+  }
+
+  const allowed = [
+    "jpg",
+    "jpeg",
+    "png",
+    "webp",
+  ];
+
+  if (!allowed.includes(ext)) {
+    throw new Error(
+      "Format gambar harus JPG, PNG, atau WEBP."
+    );
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    throw new Error(
+      "Ukuran gambar maksimal 5MB."
+    );
+  }
+
+  const path =
+    `${Date.now()}-${Math.random()
+      .toString(36)
+      .substring(2)}.${ext}`;
+
+  const { error } = await supabase.storage
+    .from(BUCKET)
+    .upload(path, file);
+
+  if (error) throw error;
+
+  const { data } = supabase.storage
+    .from(BUCKET)
+    .getPublicUrl(path);
+
+  return {
+    url: data.publicUrl,
+    path,
+  };
+},
 
   async getRecent(limit = 5): Promise<Material[]> {
   const { data, error } = await supabase
@@ -183,16 +317,66 @@ export const materialService = {
   /**
    * COUNT
    */
-  async getCount(): Promise<number> {
-    const { count } = await supabase
-      .from("materials")
-      .select("*", {
-        count: "exact",
-        head: true,
-      });
+async getCount(): Promise<number> {
+  const { count, error } = await supabase
+    .from("materials")
+    .select("*", {
+      head: true,
+      count: "exact",
+    });
 
-    return count ?? 0;
-  },
+  if (error) {
+    console.error(error);
+    return 0;
+  }
+
+  return count ?? 0;
+},
+async deleteImage(path: string) {
+  if (!path) return;
+
+  const { error } = await supabase.storage
+    .from(BUCKET)
+    .remove([path]);
+
+  if (error) {
+    throw error;
+  }
+},
+
+  async search(
+  keyword: string
+): Promise<Material[]> {
+
+  const query = keyword.trim().toLowerCase();
+
+  if (!query) return [];
+
+  const { data, error } = await supabase
+    .from("materials")
+    .select("*")
+    .eq("is_active", true)
+    .or(
+      [
+        `name.ilike.%${query}%`,
+        `description.ilike.%${query}%`,
+        `category.ilike.%${query}%`,
+        `feature.ilike.%${query}%`,
+        `color.ilike.%${query}%`,
+      ].join(",")
+    )
+    .order("created_at", {
+      ascending: false,
+    })
+    .limit(10);
+
+  if (error) {
+    console.error("[material.search]", error);
+    return [];
+  }
+
+  return (data ?? []).map(mapMaterial);
+},
 };
 
 /* =========================
@@ -241,7 +425,6 @@ function mapPayload(
   material: Partial<CreateMaterial>
 ) {
   return {
-    slug: material.slug,
     name: material.name,
     category: material.category,
     image: material.image ?? null,
@@ -253,3 +436,4 @@ function mapPayload(
     is_active: material.is_active ?? true,
   };
 }
+

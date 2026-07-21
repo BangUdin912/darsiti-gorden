@@ -52,7 +52,7 @@ export default function OrderProcess() {
         <div className="container mx-auto px-6">
           {/* Heading */}
           <div className="mx-auto mb-16 max-w-3xl text-center">
-            <span className="rounded-full bg-primary/10 px-4 py-2 text-sm font-semibold text-primary">
+            <span className="rounded-full bg-amber-100 px-4 py-2 text-sm font-semibold text-amber-700">
               Proses Pemesanan
             </span>
 
@@ -89,11 +89,11 @@ export default function OrderProcess() {
                     {/* Card */}
                     <div className="rounded-3xl border bg-white p-8 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
                       <div className="mb-5 flex items-center gap-4">
-                        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-primary text-xl font-bold text-white">
+                        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-amber-500 text-xl font-bold text-white shadow-md">
                           {step.number}
                         </div>
 
-                        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+                        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-100 text-amber-600">
                           <Icon size={28} />
                         </div>
                       </div>
@@ -112,8 +112,22 @@ export default function OrderProcess() {
                           onClick={() =>
                             setOpenConsultation(true)
                           }
-                          className="mt-6 inline-flex rounded-full bg-primary px-6 py-3 font-semibold text-white transition hover:scale-105"
-                        >
+                          className="
+mt-6
+inline-flex
+rounded-full
+bg-amber-500
+px-6
+py-3
+font-semibold
+text-white
+transition-all
+duration-300
+hover:scale-105
+hover:bg-amber-600
+shadow-md
+hover:shadow-lg
+">
                           Mulai Konsultasi
                         </button>
                       )}
@@ -121,7 +135,7 @@ export default function OrderProcess() {
 
                     {/* Timeline Circle */}
                     <div className="relative hidden justify-center lg:flex">
-                      <div className="z-10 flex h-16 w-16 items-center justify-center rounded-full border-4 border-white bg-primary text-lg font-bold text-white shadow-lg">
+                      <div className="z-10 flex h-16 w-16 items-center justify-center rounded-full border-4 border-white bg-amber-500 text-lg font-bold text-white shadow-lg">
                         {step.number}
                       </div>
                     </div>

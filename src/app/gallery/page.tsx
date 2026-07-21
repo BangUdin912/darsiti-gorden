@@ -2,10 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import { galleryService } from "@/lib/galleryService";
-import { GalleryItem } from "@/types/gallery";
+import Container from "@/components/common/Container";
+import PageHeader from "@/components/common/PageHeader";
 
-import GalleryHero from "@/components/gallery/GalleryHero";
+import { galleryService } from "@/lib/galleryService";
+import type { GalleryItem } from "@/types/gallery";
+
 import GalleryFilter from "@/components/gallery/GalleryFilter";
 import GalleryGrid from "@/components/gallery/GalleryGrid";
 import GalleryLightbox from "@/components/gallery/GalleryLightbox";
@@ -36,26 +38,26 @@ export default function GalleryPage() {
   }, []);
 
   const filteredGallery = useMemo(() => {
-  const keyword = search.toLowerCase().trim();
+    const keyword = search.toLowerCase().trim();
 
-  return gallery.filter((item) => {
-    const categories = Array.isArray(item.category)
-      ? item.category
-      : [item.category];
+    return gallery.filter((item) => {
+      const categories = Array.isArray(item.category)
+        ? item.category
+        : [item.category];
 
-    const matchCategory =
-      category === "Semua" ||
-      categories.includes(category);
+      const matchCategory =
+        category === "Semua" ||
+        categories.includes(category);
 
-    const matchSearch =
-      item.title.toLowerCase().includes(keyword) ||
-      item.description.toLowerCase().includes(keyword) ||
-      item.location.toLowerCase().includes(keyword) ||
-      categories.join(" ").toLowerCase().includes(keyword);
+      const matchSearch =
+        item.title.toLowerCase().includes(keyword) ||
+        item.description.toLowerCase().includes(keyword) ||
+        item.location.toLowerCase().includes(keyword) ||
+        categories.join(" ").toLowerCase().includes(keyword);
 
-    return matchCategory && matchSearch;
-  });
-}, [gallery, search, category]);
+      return matchCategory && matchSearch;
+    });
+  }, [gallery, search, category]);
 
   function openLightbox(index: number) {
     setCurrentIndex(index);
@@ -64,65 +66,96 @@ export default function GalleryPage() {
 
   function prevImage() {
     setCurrentIndex((prev) =>
-      prev === 0 ? filteredGallery.length - 1 : prev - 1
+      prev === 0
+        ? filteredGallery.length - 1
+        : prev - 1
     );
   }
 
   function nextImage() {
     setCurrentIndex((prev) =>
-      prev === filteredGallery.length - 1 ? 0 : prev + 1
+      prev === filteredGallery.length - 1
+        ? 0
+        : prev + 1
     );
   }
 
   return (
     <>
-      <GalleryHero />
+      <PageHeader
+        title="Galeri Pemasangan"
+        description="Lihat berbagai hasil pemasangan gorden yang telah kami kerjakan untuk rumah, kantor, hotel, apartemen, sekolah, hingga berbagai proyek interior lainnya."
+        image="/images/gallery/gordenn2.jpg"
+        breadcrumb={[
+          {
+            label: "Galeri",
+          },
+        ]}
+      />
 
-      {/* SEARCH */}
-      <section className="border-b bg-white py-8">
-        <div className="container mx-auto max-w-7xl px-4">
+      {/* Search */}
+      <section className="border-b bg-stone-50 py-8">
+        <Container>
           <input
-            type="text"
+            type="search"
             placeholder="Cari galeri..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-xl border p-4 focus:border-amber-500 focus:outline-none"
+            onChange={(e) =>
+              setSearch(e.target.value)
+            }
+            className="
+              h-14
+              w-full
+              rounded-2xl
+              border
+              border-stone-200
+              bg-white
+              px-5
+              text-sm
+              shadow-sm
+              outline-none
+              transition
+
+              focus:border-primary
+              focus:ring-2
+              focus:ring-primary/20
+            "
           />
-        </div>
+        </Container>
       </section>
 
-      {/* FILTER */}
-<GalleryFilter
-  products={gallery}
-  current={category}
-  onSelect={setCategory}
-/>
+      {/* Filter */}
+      <GalleryFilter
+        products={gallery}
+        current={category}
+        onSelect={setCategory}
+      />
 
-      {/* COUNT */}
-      <section className="container mx-auto max-w-7xl px-4 py-8">
-        <p className="text-gray-600">
-          Menampilkan{" "}
-          <span className="font-semibold text-amber-600">
-            {filteredGallery.length}
-          </span>{" "}
-          proyek
-        </p>
+      {/* Count */}
+      <section className="bg-white py-8">
+        <Container>
+          <p className="text-stone-600">
+            Menampilkan{" "}
+            <span className="font-semibold text-primary">
+              {filteredGallery.length}
+            </span>{" "}
+            proyek pemasangan.
+          </p>
+        </Container>
       </section>
 
-      {/* LOADING */}
+      {/* Gallery */}
       {loading ? (
-        <div className="py-20 text-center text-gray-500">
+        <div className="py-24 text-center text-stone-500">
           Memuat galeri...
         </div>
       ) : (
         <>
-          {/* GRID */}
           <GalleryGrid
             items={filteredGallery}
             onOpen={openLightbox}
           />
 
-          {/* LIGHTBOX */}
           <GalleryLightbox
             items={filteredGallery}
             currentIndex={currentIndex}

@@ -48,71 +48,92 @@ const steps = [
 
 export default function WorkProcess() {
   return (
-    <section className="py-24">
+    <section className="py-16 lg:py-24">
       <div className="container mx-auto px-4">
 
         {/* Heading */}
-        <div className="mx-auto mb-20 max-w-3xl text-center">
-          <span className="inline-flex rounded-full bg-yellow-100 px-4 py-1 text-sm font-semibold text-yellow-700">
+        <div className="mx-auto mb-14 max-w-3xl text-center lg:mb-20">
+
+          <span className="inline-flex rounded-full bg-amber-100 px-4 py-2 text-sm font-semibold text-amber-700">
             Proses Kerja
           </span>
 
-          <h2 className="mt-5 text-4xl font-bold md:text-5xl">
+          <h2 className="mt-4 text-3xl font-bold sm:text-4xl lg:text-5xl">
             Mudah, Cepat &
-            <span className="text-[#D4AF37]"> Profesional</span>
+            <span className="text-amber-500">
+              {" "}Profesional
+            </span>
           </h2>
 
-          <p className="mt-6 text-lg leading-8 text-muted-foreground">
+          <p className="mt-5 text-base leading-7 text-muted-foreground sm:text-lg sm:leading-8">
             Kami menerapkan proses kerja yang terstruktur agar setiap proyek
             berjalan lancar, mulai dari konsultasi hingga pemasangan selesai.
           </p>
+
         </div>
 
-        {/* Timeline */}
         <div className="relative">
 
-          {/* Garis desktop */}
-          <div className="absolute left-0 right-0 top-10 hidden h-1 bg-yellow-200 lg:block" />
+          {/* Desktop Line */}
+          <div className="absolute left-0 right-0 top-10 hidden h-1 rounded-full bg-amber-200 lg:block" />
 
-          <div className="grid gap-10 lg:grid-cols-5">
+          <div className="grid gap-8 lg:grid-cols-5">
 
-            {steps.map((step) => {
+            {steps.map((step, index) => {
               const Icon = step.icon;
 
               return (
+
                 <div
                   key={step.number}
-                  className="relative text-center"
+                  className="relative"
                 >
-                  {/* Garis mobile */}
-                  <div className="absolute left-7 top-16 bottom-0 w-0.5 bg-yellow-200 lg:hidden" />
 
-                  {/* Circle */}
-                  <div className="relative z-10 mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#D4AF37] shadow-lg">
+                  {/* Mobile Timeline */}
+                  {index !== steps.length - 1 && (
+                    <div className="absolute left-8 top-16 h-full w-0.5 bg-amber-200 lg:hidden" />
+                  )}
 
-                    <Icon className="h-9 w-9 text-white" />
+                  <div className="flex gap-5 lg:block lg:text-center">
+
+                    {/* Icon */}
+                    <div className="relative z-10 flex-shrink-0 lg:mx-auto">
+
+                      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-amber-500 shadow-lg transition duration-300 hover:scale-105">
+
+                        <Icon className="h-7 w-7 text-white" />
+
+                      </div>
+
+                    </div>
+
+                    {/* Content */}
+                    <div className="pb-10 lg:pb-0">
+
+                      <span className="inline-block rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-700 sm:text-sm lg:mt-6">
+                        {step.number}
+                      </span>
+
+                      <h3 className="mt-3 text-xl font-bold text-stone-900 lg:text-2xl">
+                        {step.title}
+                      </h3>
+
+                      <p className="mt-3 text-sm leading-7 text-muted-foreground sm:text-base">
+                        {step.description}
+                      </p>
+
+                    </div>
 
                   </div>
 
-                  {/* Number */}
-                  <span className="mt-6 inline-block rounded-full bg-yellow-100 px-3 py-1 text-sm font-bold text-yellow-700">
-                    {step.number}
-                  </span>
-
-                  {/* Title */}
-                  <h3 className="mt-4 text-2xl font-semibold">
-                    {step.title}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="mt-4 leading-7 text-muted-foreground">
-                    {step.description}
-                  </p>
                 </div>
+
               );
             })}
           </div>
+
         </div>
+
       </div>
     </section>
   );

@@ -1,8 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import {
+  usePathname,
+  useRouter,
+} from "next/navigation";
 
 import {
   LayoutDashboard,
@@ -12,10 +16,16 @@ import {
   MessageSquare,
   Settings,
   LogOut,
+  X,
 } from "lucide-react";
 
 import { profileService } from "@/lib/profileService";
 import type { Profile } from "@/types/profile";
+
+interface SidebarProps {
+  open: boolean;
+  onClose: () => void;
+}
 
 const menus = [
   {
@@ -50,7 +60,10 @@ const menus = [
   },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({
+  open,
+  onClose,
+}: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -63,6 +76,11 @@ export default function Sidebar() {
   useEffect(() => {
     loadProfile();
   }, []);
+
+  // otomatis menutup sidebar saat pindah halaman (mobile)
+  useEffect(() => {
+    onClose();
+  }, [pathname]);
 
   async function loadProfile() {
     try {
@@ -80,21 +98,15 @@ export default function Sidebar() {
   }
 
   async function handleLogout() {
-    const ok = confirm(
-      "Yakin ingin logout?"
-    );
-
-    if (!ok) return;
+    if (!confirm("Yakin ingin logout?")) return;
 
     try {
       await profileService.logout();
 
       router.replace("/login");
-
       router.refresh();
     } catch (err) {
       console.error(err);
-
       alert("Logout gagal.");
     }
   }
@@ -113,89 +125,203 @@ export default function Sidebar() {
   const initials =
     profile?.full_name
       ?.split(" ")
-      .map((item) => item[0])
+      .map((v) => v[0])
       .join("")
       .substring(0, 2)
       .toUpperCase() || "DG";
 
   return (
-    <aside className="hidden w-72 shrink-0 border-r border-stone-200 bg-white lg:flex lg:flex-col">
+    <>
+      {/* Overlay Mobile */}
+      <div
+        onClick={onClose}
+        className={`
+          fixed
+          inset-0
+          z-40
+          bg-black/50
+          transition-opacity
+          duration-300
+          lg:hidden
+          ${
+            open
+              ? "opacity-100"
+              : "pointer-events-none opacity-0"
+          }
+        `}
+      />
 
-      {/* Logo */}
-      <div className="border-b border-stone-200 p-8">
-        <Link href="/admin/dashboard">
+      {/* Sidebar */}
+      {/* Sidebar */}
+<aside
+  className={`
+    z-50
+    flex
+    w-72
+    flex-col
+    border-r
+    border-stone-200
+    bg-white
+    shadow-xl
+    transition-transform
+    duration-300
+    ease-in-out
 
-          <div className="flex items-center gap-4">
 
+    fixed
+    left-0
+    top-0
+    h-screen
+
+    ${
+      open
+        ? "translate-x-0"
+        : "-translate-x-full"
+    }
+
+
+    lg:sticky
+    lg:top-[88px]
+    lg:h-[calc(100vh-88px)]
+    lg:translate-x-0
+    lg:shadow-none
+  `}
+>
+        {/* Header */}
+        <div className="border-b border-stone-200 p-6">
+
+          {/* Mobile Close */}
+          <div className="mb-5 flex items-center justify-between lg:hidden">
+
+            <h2 className="font-semibold">
+              Menu
+            </h2>
+
+            <button
+              onClick={onClose}
+              className="rounded-lg p-2 transition hover:bg-stone-100"
+            >
+              <X size={20} />
+            </button>
+
+          </div>
+
+          <Link
+            href="/admin/dashboard"
+            className="flex items-center gap-4"
+          >
             {profile?.avatar_url ? (
-              <img
+              <Image
                 src={profile.avatar_url}
                 alt="Avatar"
-                className="h-14 w-14 rounded-2xl object-cover shadow-lg"
+                width={56}
+                height={56}
+                unoptimized
+                className="rounded-2xl object-cover"
               />
             ) : (
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-500 text-xl font-bold text-white shadow-lg">
+              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-500 text-lg font-bold text-white">
                 {initials}
               </div>
             )}
 
-            <div>
-              <h1 className="text-xl font-bold text-stone-900">
-                {profile?.full_name ||
+            <div className="min-w-0">
+              <h1 className="truncate font-bold text-stone-900">
+                {profile?.full_name ??
                   "Darsiti Gorden"}
               </h1>
 
-              <p className="text-sm text-stone-500">
+              <p className="truncate text-sm text-stone-500">
                 {email || "Administrator"}
               </p>
             </div>
+          </Link>
+        </div>
 
-          </div>
+        {/* Navigation */}
+<nav
+  className="
+    flex-1
+    overflow-y-auto
+    px-5
+    py-6
+    scrollbar-thin
+  "
+>
+  <div className="space-y-2">
+    {menus.map((menu) => {
+      const Icon = menu.icon;
 
-        </Link>
-      </div>
+      const active =
+        isActive(menu.href);
 
-      {/* Menu */}
-      <nav className="flex-1 space-y-2 p-6">
+      return (
+        <Link
+          key={menu.href}
+          href={menu.href}
+          className={`
+            flex
+            items-center
+            gap-4
+            rounded-xl
+            px-4
+            py-3
+            text-sm
+            font-medium
+            transition-all
+            duration-200
 
-        {menus.map((menu) => {
-          const Icon = menu.icon;
-
-          const active = isActive(menu.href);
-
-          return (
-            <Link
-              key={menu.href}
-              href={menu.href}
-              className={`flex items-center gap-4 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 ${
-                active
-                  ? "bg-amber-500 text-white shadow-md"
-                  : "text-stone-600 hover:bg-amber-50 hover:text-amber-600"
-              }`}
-            >
-              <Icon size={20} />
-
-              <span>{menu.title}</span>
-            </Link>
-          );
-        })}
-
-      </nav>
-
-      {/* Footer */}
-      <div className="border-t border-stone-200 p-6">
-
-        <button
-          onClick={handleLogout}
-          className="flex w-full items-center gap-4 rounded-xl px-4 py-3 text-sm font-medium text-red-500 transition hover:bg-red-50"
+            ${
+              active
+                ? "bg-amber-500 text-white shadow-md"
+                : "text-stone-600 hover:bg-amber-50 hover:text-amber-600"
+            }
+          `}
         >
-          <LogOut size={20} />
+          <Icon size={20} />
 
-          Logout
-        </button>
+          <span>
+            {menu.title}
+          </span>
+        </Link>
+      );
+    })}
+  </div>
+</nav>
 
-      </div>
+        {/* Footer */}
+<div
+  className="
+    shrink-0
+    border-t
+    border-stone-200
+    bg-white
+    p-5
+  "
+>
+  <button
+    onClick={handleLogout}
+    className="
+      flex
+      w-full
+      items-center
+      gap-4
+      rounded-xl
+      px-4
+      py-3
+      text-sm
+      font-medium
+      text-red-500
+      transition
+      hover:bg-red-50
+    "
+  >
+    <LogOut size={20} />
 
-    </aside>
+    Logout
+  </button>
+</div>
+      </aside>
+    </>
   );
 }

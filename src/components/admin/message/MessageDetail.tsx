@@ -1,5 +1,16 @@
 "use client";
 
+import {
+  Mail,
+  Phone,
+  MapPin,
+  MessageSquare,
+  Package,
+  Layers3,
+  Wrench,
+  CalendarDays,
+} from "lucide-react";
+
 import type { Message } from "@/types/message";
 
 interface Props {
@@ -11,7 +22,7 @@ export default function MessageDetail({
   message,
   onClose,
 }: Props) {
-const whatsappText = encodeURIComponent(
+  const whatsappText = encodeURIComponent(
 `Halo ${message.name},
 
 Terima kasih telah menghubungi Darsiti Gorden.
@@ -23,141 +34,198 @@ WhatsApp  : ${message.phone}
 Alamat    : ${message.address || "-"}
 Produk    : ${message.productName || "-"}
 Material  : ${message.material || "-"}
-Proyek    : ${message.service || "-"}
+Layanan   : ${message.service || "-"}
+Status    : ${message.status || "-"}
 
 Kami akan segera menghubungi Anda untuk konsultasi lebih lanjut.
 
 Terima kasih.`
-);
+  );
+
+  const statusClass =
+    message.status === "done"
+      ? "bg-green-100 text-green-700"
+      : message.status === "processing"
+      ? "bg-blue-100 text-blue-700"
+      : "bg-amber-100 text-amber-700";
+
+  const formatDate = (date?: string) => {
+    if (!date) return "-";
+
+    return new Date(date).toLocaleString("id-ID", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-5">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-5 backdrop-blur-sm">
+      <div className="flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl">
 
-      <div className="w-full max-w-2xl rounded-3xl bg-white p-8">
+        {/* Header */}
+        <div className="flex items-center justify-between border-b border-stone-200 px-8 py-6">
+          <div>
+            <h2 className="text-2xl font-bold text-stone-900">
+              Detail Pesan
+            </h2>
 
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b bg-white px-8 py-6">
-          <h2 className="text-2xl font-bold">
-            Detail Pesan
-          </h2>
+            <p className="mt-1 text-sm text-stone-500">
+              Informasi lengkap konsultasi pelanggan
+            </p>
+          </div>
 
           <button
             onClick={onClose}
-            className="rounded-xl border px-4 py-2"
+            className="rounded-xl border border-stone-300 px-5 py-2 transition hover:bg-stone-100"
           >
             Tutup
           </button>
         </div>
 
-        <div className="max-h-[calc(90vh-170px)] overflow-y-auto space-y-5 px-8 py-6">
+        {/* Body */}
+        <div className="flex-1 overflow-y-auto px-8 py-6">
+          <div className="grid gap-6 md:grid-cols-2">
 
-  <div>
-    <p className="text-sm text-gray-500">
-      Nama
-    </p>
+            <InfoItem
+              label="Nama"
+              value={message.name}
+            />
 
-    <h3 className="font-semibold">
-      {message.name}
-    </h3>
-  </div>
+            <InfoItem
+              label="Email"
+              value={message.email || "-"}
+              icon={<Mail size={16} />}
+            />
 
-  <div>
-    <p className="text-sm text-gray-500">
-      WhatsApp
-    </p>
+            <InfoItem
+              label="Nomor WhatsApp"
+              value={message.phone}
+              icon={<Phone size={16} />}
+            />
 
-    <h3 className="font-semibold">
-      {message.phone}
-    </h3>
-  </div>
+            <InfoItem
+              label="Alamat"
+              value={message.address || "-"}
+              icon={<MapPin size={16} />}
+            />
 
-  <div>
-    <p className="text-sm text-gray-500">
-      Email
-    </p>
+            <InfoItem
+              label="Produk"
+              value={message.productName || "-"}
+              icon={<Package size={16} />}
+            />
 
-    <h3>
-      {message.email || "-"}
-    </h3>
-  </div>
+            <InfoItem
+              label="Material"
+              value={message.material || "-"}
+              icon={<Layers3 size={16} />}
+            />
 
-  {/* Alamat */}
+            <InfoItem
+              label="Jenis Layanan"
+              value={message.service || "-"}
+              icon={<Wrench size={16} />}
+            />
 
-  <div>
-    <p className="text-sm text-gray-500">
-      Alamat
-    </p>
+            <div>
+              <p className="mb-2 text-sm text-stone-500">
+                Status
+              </p>
 
-    <h3 className="whitespace-pre-wrap">
-      {message.address || "-"}
-    </h3>
-  </div>
+              <span
+                className={`inline-flex rounded-full px-4 py-2 text-sm font-semibold ${statusClass}`}
+              >
+                {message.status}
+              </span>
+            </div>
 
-  <div>
-    <p className="text-sm text-gray-500">
-      Produk
-    </p>
+            <InfoItem
+              label="Tanggal Dibuat"
+              value={formatDate(message.createdAt)}
+              icon={<CalendarDays size={16} />}
+            />
 
-    <h3>
-      {message.productName || "-"}
-    </h3>
-  </div>
+            {message.updatedAt && (
+              <InfoItem
+                label="Terakhir Diubah"
+                value={formatDate(message.updatedAt)}
+                icon={<CalendarDays size={16} />}
+              />
+            )}
 
-  <div>
-  <p className="text-sm text-gray-500">
-    Material
-  </p>
+          </div>
 
-  <h3 className="font-medium">
-    {message.material || "-"}
-  </h3>
-</div>
+          <hr className="my-8 border-stone-200" />
 
-  <div>
-    <p className="text-sm text-gray-500">
-      Jenis Proyek
-    </p>
+          <div>
+            <h3 className="mb-4 flex items-center gap-2 text-lg font-bold">
+              <MessageSquare size={20} />
+              Pesan Pelanggan
+            </h3>
 
-    <h3>
-      {message.service || "-"}
-    </h3>
-  </div>
+            <div className="rounded-2xl bg-stone-50 p-5 leading-7 whitespace-pre-wrap text-stone-700">
+              {message.message || "-"}
+            </div>
+          </div>
+        </div>
 
-  <div>
-    <p className="text-sm text-gray-500">
-      Pesan
-    </p>
-
-    <div className="rounded-2xl bg-stone-100 p-5 whitespace-pre-wrap">
-      {message.message || "-"}
-    </div>
-  </div>
-
-  <div>
-    <p className="text-sm text-gray-500">
-      Status
-    </p>
-
-    <span className="rounded-full bg-blue-100 px-4 py-2 text-sm">
-      {message.status}
-    </span>
-  </div>
-
-</div>
-
-        <div className="mt-8 flex gap-4">
+        {/* Footer */}
+        <div className="flex flex-wrap justify-end gap-3 border-t border-stone-200 px-8 py-6">
 
           <a
             href={`https://wa.me/${message.phone}?text=${whatsappText}`}
             target="_blank"
-            className="rounded-xl bg-green-600 px-6 py-3 text-white"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-xl bg-green-600 px-6 py-3 font-semibold text-white transition hover:bg-green-700"
           >
+            <MessageSquare size={18} />
             Balas WhatsApp
           </a>
 
+          <button
+            onClick={onClose}
+            className="rounded-xl border border-stone-300 px-6 py-3 font-semibold transition hover:bg-stone-100"
+          >
+            Tutup
+          </button>
+
         </div>
-
       </div>
+    </div>
+  );
+}
 
+interface InfoItemProps {
+  label: string;
+  value: React.ReactNode;
+  icon?: React.ReactNode;
+}
+
+function InfoItem({
+  label,
+  value,
+  icon,
+}: InfoItemProps) {
+  return (
+    <div>
+      <p className="mb-2 text-sm text-stone-500">
+        {label}
+      </p>
+
+      <div className="flex min-h-[56px] items-start gap-3 rounded-2xl bg-stone-50 p-4">
+        {icon && (
+          <div className="mt-0.5 text-stone-500">
+            {icon}
+          </div>
+        )}
+
+        <span className="break-words font-medium text-stone-800">
+          {value}
+        </span>
+      </div>
     </div>
   );
 }

@@ -137,7 +137,7 @@ WhatsApp : ${form.phone}
 Email : ${form.email || "-"}
 Alamat : ${form.address || "-"}
 
-Jenis Proyek : ${form.service || "-"}
+Jenis Layanan : ${form.service || "-"}
 
 Produk :
 ${selectedProduct}
@@ -364,7 +364,7 @@ customMaterial: "",
                                 <div>
                                     <label className="mb-2 flex items-center gap-2 font-medium">
                                         <Building2 className="h-4 w-4" />
-                                        Jenis Proyek
+                                        Jenis Layanan
                                     </label>
 
                                     <select
@@ -373,14 +373,11 @@ customMaterial: "",
                                         onChange={handleChange}
                                         className="w-full rounded-xl border p-4 focus:border-amber-500 focus:outline-none"
                                     >
-                                        <option value="">Pilih</option>
-                                        <option>Rumah</option>
-                                        <option>Apartemen</option>
-                                        <option>Kantor</option>
-                                        <option>Hotel</option>
-                                        <option>Masjid</option>
-                                        <option>Sekolah</option>
-                                        <option>Lainnya</option>
+                                        <option value="">Pilih Layanan</option>
+  <option>Konsultasi</option>
+  <option>Survey Lokasi</option>
+  <option>Pemasangan</option>
+  <option>Perbaikan</option>
                                     </select>
                                 </div>
 

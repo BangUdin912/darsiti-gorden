@@ -27,7 +27,7 @@ const materials = [
   {
     title: "Vitrase",
     subtitle: "Elegan",
-    image: "/images/bahan/Gorden Blackout/vitrase.jpg",
+    image: "/images/bahan/Gorden Blackout/Vitrase.jpg",
     description:
       "Memberikan pencahayaan alami yang lembut sekaligus mempercantik tampilan ruangan. Sangat cocok dipadukan dengan gorden utama.",
     badge: "Modern",

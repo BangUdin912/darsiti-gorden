@@ -264,11 +264,11 @@ export default function MessageEdit({
             )}
         </div>
 
-        {/* Jenis Proyek */}
+        {/* Jenis Layanan */}
 
         <div>
             <label className="mb-2 block text-sm font-semibold">
-                Jenis Proyek
+                Jenis Layanan
             </label>
 
             <select
@@ -277,14 +277,11 @@ export default function MessageEdit({
                 onChange={handleChange}
                 className="w-full rounded-xl border p-3"
             >
-                <option value="">Pilih Jenis Proyek</option>
-                <option value="Rumah">Rumah</option>
-                <option value="Apartemen">Apartemen</option>
-                <option value="Kantor">Kantor</option>
-                <option value="Hotel">Hotel</option>
-                <option value="Masjid">Masjid</option>
-                <option value="Sekolah">Sekolah</option>
-                <option value="Lainnya">Lainnya</option>
+                <option value="">Pilih Jenis Layanan</option>
+  <option>Konsultasi</option>
+  <option>Survey Lokasi</option>
+  <option>Pemasangan</option>
+  <option>Perbaikan</option>
             </select>
 
             {form.service === "Lainnya" && (
@@ -292,7 +289,7 @@ export default function MessageEdit({
                     name="customService"
                     value={form.customService}
                     onChange={handleChange}
-                    placeholder="Masukkan jenis proyek..."
+                    placeholder="Masukkan jenis layanan..."
                     className="mt-3 w-full rounded-xl border p-3"
                 />
             )}

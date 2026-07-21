@@ -36,23 +36,49 @@ export default function ProductLightbox({
   if (!item) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 backdrop-blur-sm">
-
+    <div
+      className="
+        fixed inset-0 z-[9999]
+        overflow-y-auto
+        bg-black/90
+        backdrop-blur-sm
+        p-4
+      "
+    >
       {/* Close */}
       <button
         onClick={onClose}
-        className="absolute right-6 top-6 rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20"
+        className="
+          fixed top-4 right-4 z-50
+          rounded-full
+          bg-white/20
+          p-2.5
+          text-white
+          transition
+          hover:bg-white/30
+          sm:top-6 sm:right-6 sm:p-3
+        "
       >
-        <X size={24} />
+        <X size={22} />
       </button>
 
       {/* Previous */}
       {items.length > 1 && (
         <button
           onClick={onPrev}
-          className="absolute left-6 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20"
+          className="
+            fixed left-3 top-1/2 z-40
+            -translate-y-1/2
+            rounded-full
+            bg-white/20
+            p-2
+            text-white
+            transition
+            hover:bg-white/30
+            sm:left-6 sm:p-3
+          "
         >
-          <ChevronLeft size={30} />
+          <ChevronLeft size={24} />
         </button>
       )}
 
@@ -60,91 +86,148 @@ export default function ProductLightbox({
       {items.length > 1 && (
         <button
           onClick={onNext}
-          className="absolute right-6 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition hover:bg-white/20"
+          className="
+            fixed right-3 top-1/2 z-40
+            -translate-y-1/2
+            rounded-full
+            bg-white/20
+            p-2
+            text-white
+            transition
+            hover:bg-white/30
+            sm:right-6 sm:p-3
+          "
         >
-          <ChevronRight size={30} />
+          <ChevronRight size={24} />
         </button>
       )}
 
-      <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-6 lg:flex-row">
+      <div
+        className="
+          mx-auto
+          flex
+          min-h-full
+          w-full
+          max-w-7xl
+          items-center
+          justify-center
+          py-6
+        "
+      >
+        <div
+          className="
+            flex
+            w-full
+            flex-col
+            gap-5
+            lg:flex-row
+            lg:gap-8
+          "
+        >
+          {/* IMAGE */}
+          <div
+            className="
+              relative
+              h-[320px]
+              w-full
+              overflow-hidden
+              rounded-3xl
+              bg-black
+              sm:h-[500px]
+              lg:h-[700px]
+              lg:flex-[2]
+            "
+          >
+            <Image
+              src={item.image || "/images/placeholder.jpg"}
+              alt={item.name}
+              fill
+              priority
+              unoptimized
+              className="object-contain"
+              sizes="100vw"
+            />
+          </div>
 
-        {/* IMAGE */}
-        <div className="relative h-[350px] w-full overflow-hidden rounded-3xl bg-black lg:h-[700px] lg:flex-[2]">
+          {/* INFORMATION */}
+          <div
+            className="
+              w-full
+              max-h-[45vh]
+              overflow-y-auto
+              rounded-3xl
+              bg-white
+              p-5
+              sm:p-8
+              lg:max-h-[700px]
+              lg:max-w-md
+            "
+          >
+            {/* Category */}
+            <span className="inline-flex rounded-full bg-amber-100 px-4 py-2 text-sm font-semibold text-amber-700">
+              {item.category?.join(", ") || "Tanpa Kategori"}
+            </span>
 
-          <Image
-            src={item.image || "/images/placeholder.jpg"}
-            alt={item.name}
-            fill
-            priority
-            unoptimized
-            className="object-contain"
-            sizes="(max-width:1024px)100vw,70vw"
-          />
+            {/* Title */}
+            <h2 className="mt-6 text-2xl font-bold text-gray-900 sm:text-3xl">
+              {item.name}
+            </h2>
 
-        </div>
+            {/* Info */}
+            <div className="mt-6 space-y-4">
+              <div className="flex items-center gap-3 text-gray-700">
+                <Tag
+                  size={18}
+                  className="text-amber-500"
+                />
+                <span>
+                  {item.category?.join(", ") || "Tanpa Kategori"}
+                </span>
+              </div>
 
-        {/* INFORMATION */}
-        <div className="w-full rounded-3xl bg-white p-8 lg:max-w-md">
+              {item.room?.length > 0 && (
+                <div className="flex items-center gap-3 text-gray-700">
+                  <Star
+                    size={18}
+                    className="text-blue-500"
+                  />
+                  <span>{item.room.join(", ")}</span>
+                </div>
+              )}
 
-          <span className="inline-flex rounded-full bg-amber-100 px-4 py-2 text-sm font-semibold text-amber-700">
-            {item.category?.join(", ") || "Tanpa Kategori"}
-          </span>
-
-          <h2 className="mt-6 text-3xl font-bold">
-            {item.name}
-          </h2>
-
-          <div className="mt-6 space-y-4">
-
-            <div className="flex items-center gap-3 text-gray-700">
-              <Tag
-                className="text-amber-600"
-                size={18}
-              />
-              <span>
-                {item.category?.join(", ") || "Tanpa Kategori"}
-              </span>
+              {item.price ? (
+                <div className="pt-2 text-2xl font-bold text-amber-500">
+                  {formatPrice(item.price)}
+                </div>
+              ) : (
+                <div className="pt-2 text-lg font-semibold text-gray-400">
+                  Hubungi Kami
+                </div>
+              )}
             </div>
 
-            {item.room?.length ? (
-  <div className="flex items-center gap-3 text-gray-700">
-    <Star className="text-blue-600" size={18} />
-    <span>{item.room.join(", ")}</span>
-  </div>
-) : null}
+            {/* Description */}
+            <div className="mt-8 border-t border-gray-200 pt-6">
+              <h3 className="mb-3 text-lg font-semibold text-gray-900">
+                Deskripsi
+              </h3>
 
-            {item.price && (
-              <div className="text-2xl font-bold text-amber-600">
-                {formatPrice(item.price)}
-              </div>
-            )}
+              <p className="leading-7 text-gray-600">
+                {item.description ||
+                  item.short_description ||
+                  "-"}
+              </p>
+            </div>
 
+            {/* Counter */}
+            <div className="mt-8 rounded-2xl bg-gray-100 p-4">
+              <p className="text-sm text-gray-600">
+                Produk {currentIndex + 1} dari {items.length}
+              </p>
+            </div>
           </div>
-
-          <div className="mt-8 border-t pt-8">
-
-            <h3 className="mb-4 text-lg font-semibold">
-              Deskripsi
-            </h3>
-
-            <p className="leading-8 text-gray-600">
-              {item.description}
-            </p>
-
-          </div>
-
-          <div className="mt-10 rounded-2xl bg-stone-100 p-5">
-
-            <p className="text-sm text-gray-600">
-              Produk {currentIndex + 1} dari {items.length}
-            </p>
-
-          </div>
-
         </div>
-
       </div>
-
     </div>
   );
 }

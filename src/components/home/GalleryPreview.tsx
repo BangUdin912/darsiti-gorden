@@ -18,7 +18,7 @@ export default function GalleryPreview() {
     useState<string | null>(null);
 
 const getImage = (item: GalleryItem) =>
-  item.image_url || "/images/no-image.png";
+  item.image || "/images/no-image.png";
 
   if (loading) {
     return (

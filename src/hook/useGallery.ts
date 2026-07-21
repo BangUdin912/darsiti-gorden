@@ -24,21 +24,19 @@ export function useGallery({
   useEffect(() => {
     async function load() {
       try {
-        const data = featuredOnly
-          ? await galleryService.getFeatured(
-              limit
-            )
-          : await galleryService.getActive(
-              limit
-            );
+  setLoading(true);
 
-        setGalleries(data ?? []);
-      } catch (err) {
-        console.error(err);
-        setGalleries([]);
-      } finally {
-        setLoading(false);
-      }
+  const data = featuredOnly
+    ? await galleryService.getFeatured(limit)
+    : await galleryService.getActive(limit);
+
+  setGalleries(data);
+} catch (error) {
+  console.error("[useGallery]", error);
+  setGalleries([]);
+} finally {
+  setLoading(false);
+}
     }
 
     load();

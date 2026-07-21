@@ -1,14 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+
 import {
   ArrowLeft,
   MapPin,
   Tag,
 } from "lucide-react";
 
-import { galleryService } from "@/lib/galleryService";
+import Container from "@/components/common/Container";
+import PageHeader from "@/components/common/PageHeader";
 import GalleryDetailCTA from "@/components/gallery/GalleryDetailCTA";
+
+import { galleryService } from "@/lib/galleryService";
 
 interface Props {
   params: Promise<{
@@ -28,71 +32,111 @@ export default async function GalleryDetailPage({
   }
 
   return (
-    <main className="bg-stone-50 py-10">
-      <div className="container mx-auto max-w-6xl px-4">
+    <>
+      <PageHeader
+        title={item.title}
+        description="Lihat detail hasil pengerjaan project gorden kami dengan desain dan material yang disesuaikan dengan kebutuhan ruangan."
+        image="/images/gallery/gordenn2.jpg"
+        breadcrumb={[
+          {
+            label: "Gallery",
+            href: "/gallery",
+          },
+          {
+            label: item.title,
+          },
+        ]}
+      />
 
-        {/* Back */}
-        <Link
-          href="/gallery"
-          className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-gray-600 transition hover:text-amber-600"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Kembali ke Gallery
-        </Link>
+      <main className="bg-gray-50 py-12 lg:py-20">
+        <Container>
+          {/* Back */}
+          <Link
+            href="/gallery"
+            className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-amber-500 transition hover:translate-x-1"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Kembali ke Gallery
+          </Link>
 
-        {/* Title */}
-        <h1 className="text-3xl font-bold text-stone-900 md:text-4xl">
-          {item.title}
-        </h1>
+          {/* Image */}
+          <div className="relative aspect-[16/10] overflow-hidden rounded-3xl shadow-xl sm:aspect-[16/9]">
+            <Image
+              src={
+                item.image?.trim()
+                  ? item.image
+                  : "/images/no-image.png"
+              }
+              alt={item.title}
+              fill
+              priority
+              unoptimized
+              className="object-cover"
+              sizes="100vw"
+            />
+          </div>
 
-        {/* Meta */}
-        <div className="mt-4 flex flex-wrap items-center gap-5 text-sm text-stone-600">
+          {/* Meta */}
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            {/* Location */}
+            <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-100">
+              <div className="flex items-center gap-3">
+                <div className="rounded-xl bg-amber-100 p-3">
+                  <MapPin className="h-5 w-5 text-amber-500" />
+                </div>
 
-          <span className="inline-flex items-center gap-2">
-            <MapPin className="h-4 w-4 text-amber-500" />
-            {item.location}
-          </span>
+                <div>
+                  <p className="text-xs uppercase tracking-wide text-gray-500">
+                    Lokasi
+                  </p>
 
-          <span className="inline-flex items-center gap-2">
-            <Tag className="h-4 w-4 text-amber-500" />
-            {item.category}
-          </span>
+                  <h3 className="font-semibold text-gray-900">
+                    {item.location || "-"}
+                  </h3>
+                </div>
+              </div>
+            </div>
 
-        </div>
+            {/* Category */}
+            <div className="rounded-2xl bg-white p-5 shadow-sm ring-1 ring-gray-100">
+              <div className="flex items-center gap-3">
+                <div className="rounded-xl bg-amber-100 p-3">
+                  <Tag className="h-5 w-5 text-amber-500" />
+                </div>
 
-        {/* Image */}
-        <div className="relative mt-8 h-[500px] overflow-hidden rounded-3xl shadow-xl">
+                <div>
+                  <p className="text-xs uppercase tracking-wide text-gray-500">
+                    Kategori
+                  </p>
 
-          <Image
-            src={item.image_url}
-            alt={item.title}
-            fill
-            priority
-            className="object-cover"
-            sizes="100vw"
-          />
+                  <h3 className="font-semibold text-gray-900">
+                    {item.category || "-"}
+                  </h3>
+                </div>
+              </div>
+            </div>
+          </div>
 
-        </div>
+          {/* Description */}
+          <section className="mt-12">
+            <h2 className="text-2xl font-bold text-gray-900">
+              Tentang Project
+            </h2>
 
-        {/* Description */}
-        <div className="mt-8 max-w-3xl">
+            <p className="mt-5 leading-8 text-gray-600">
+              {item.description ||
+                "Belum ada deskripsi untuk project ini."}
+            </p>
+          </section>
 
-          <h2 className="text-xl font-semibold text-stone-900">
-            Deskripsi Project
-          </h2>
-
-          <p className="mt-3 leading-8 text-stone-600">
-            {item.description}
-          </p>
-
-        </div>
-
-        {/* Client CTA */}
-        <GalleryDetailCTA
-          projectTitle={item.title}
-        />
-
-      </div>
-    </main>
+          {/* CTA */}
+          <div className="mt-16">
+            <GalleryDetailCTA
+              projectTitle={item.title}
+            />
+          </div>
+        </Container>
+      </main>
+    </>
   );
 }

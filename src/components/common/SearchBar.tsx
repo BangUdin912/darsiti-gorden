@@ -77,7 +77,7 @@ export default function SearchBar() {
   return (
     <div
       ref={containerRef}
-      className="relative hidden lg:block"
+      className="relative w-full"
     >
       <Search
         className="
@@ -100,18 +100,18 @@ export default function SearchBar() {
           setKeyword(e.target.value)
         }
         className="
-          h-11
-          w-72
-          rounded-full
-          border
-          bg-card
-          pl-12
-          pr-4
-          text-sm
-          outline-none
-          transition-all
-          focus:border-primary
-        "
+h-11
+w-full
+rounded-full
+border
+bg-card
+pl-12
+pr-4
+text-sm
+outline-none
+transition-all
+focus:border-primary
+"
       />
 
       {open && keyword.trim() && (

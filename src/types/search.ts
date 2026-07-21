@@ -1,7 +1,9 @@
 export type SearchType =
   | "product"
   | "material"
-  | "gallery";
+  | "gallery"
+  | "message";
+
 
 export interface SearchResult {
   /**
@@ -37,12 +39,14 @@ export interface SearchResult {
   /**
    * Link tujuan
    * contoh:
-   * /product/gorden-blackout
-   * /material/blackout
-   * /gallery/rumah-minimalis
+   * /admin/product/gorden-blackout
+   * /admin/material/blackout
+   * /admin/gallery/rumah-minimalis
+   * /admin/messages/id
    */
   href: string;
 }
+
 
 export interface SearchState {
   keyword: string;
@@ -50,11 +54,14 @@ export interface SearchState {
   results: SearchResult[];
 }
 
+
 export interface SearchResponse {
   products: SearchResult[];
   materials: SearchResult[];
   galleries: SearchResult[];
+  messages: SearchResult[];
 }
+
 
 export interface GlobalSearchResult {
   keyword: string;

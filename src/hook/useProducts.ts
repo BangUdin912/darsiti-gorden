@@ -15,11 +15,10 @@ export function useProducts() {
 
   async function loadProducts() {
     try {
-      const data = await productService.getAll();
+      const data =
+    await productService.getActive();
 
-      setProducts(
-        data.filter((item) => item.is_active)
-      );
+setProducts(data);
     } finally {
       setLoading(false);
     }

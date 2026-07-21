@@ -5,17 +5,20 @@ export interface GalleryItem {
 
   title: string;
 
+  description: string;
+
   category: string;
 
   location: string;
 
-  description: string;
 
-  image_url: string;
+  image: string;
 
   image_path: string;
 
+
   featured: boolean;
+
 
   created_at: string;
 
@@ -26,8 +29,6 @@ export interface GalleryItem {
  * Data untuk membuat gallery baru
  */
 export interface CreateGalleryInput {
-  slug: string;
-
   title: string;
 
   category: string;
@@ -36,11 +37,13 @@ export interface CreateGalleryInput {
 
   description: string;
 
-  image_url: string;
+  image: string;
 
   image_path: string;
 
   featured?: boolean;
+
+  is_active?: boolean;
 }
 
 /**
@@ -62,6 +65,8 @@ export interface GalleryFormData {
   description: string;
 
   featured: boolean;
+
+  is_active: boolean;
 }
 
 /**
@@ -78,9 +83,18 @@ export interface GalleryUploadResult {
  */
 export interface GalleryFormValues {
   title: string;
-  slug?: string;
+
   category: string;
+
   location: string;
+
   description: string;
+
+  image: string;
+
+  image_path: string;
+
   featured: boolean;
+
+  is_active: boolean;
 }

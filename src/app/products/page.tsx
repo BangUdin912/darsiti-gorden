@@ -2,10 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+import Container from "@/components/common/Container";
+import PageHeader from "@/components/common/PageHeader";
+
 import type { Product } from "@/types/product";
 import { productService } from "@/lib/productService";
 
-import ProductHero from "@/components/product/ProductHero";
 import CategoryFilter from "@/components/product/CategoryFilter";
 import ProductGrid from "@/components/product/ProductGrid";
 import ProductLightbox from "@/components/product/ProductLightbox";
@@ -17,9 +19,7 @@ export default function ProductsPage() {
   const [category, setCategory] = useState("Semua");
   const [search, setSearch] = useState("");
 
-  // Lightbox
   const [openPreview, setOpenPreview] = useState(false);
-
   const [previewIndex, setPreviewIndex] = useState(0);
 
   useEffect(() => {
@@ -31,7 +31,10 @@ export default function ProductsPage() {
           data.filter((item) => item.is_active)
         );
       } catch (error) {
-        console.error("Failed to load products:", error);
+        console.error(
+          "Failed to load products:",
+          error
+        );
       } finally {
         setLoading(false);
       }
@@ -41,26 +44,37 @@ export default function ProductsPage() {
   }, []);
 
   const filteredProducts = useMemo(() => {
-    const keyword = search.trim().toLowerCase();
+    const keyword = search
+      .trim()
+      .toLowerCase();
 
     return products.filter((item) => {
-      const categories = item.category ?? [];
+      const categories =
+        item.category ?? [];
 
       const matchCategory =
         category === "Semua" ||
         categories.includes(category);
 
       const matchSearch =
-        item.name.toLowerCase().includes(keyword) ||
+        item.name
+          .toLowerCase()
+          .includes(keyword) ||
         (item.short_description ?? "")
           .toLowerCase()
           .includes(keyword) ||
         (item.description ?? "")
           .toLowerCase()
           .includes(keyword) ||
-        categories.join(" ").toLowerCase().includes(keyword);
+        categories
+          .join(" ")
+          .toLowerCase()
+          .includes(keyword);
 
-      return matchCategory && matchSearch;
+      return (
+        matchCategory &&
+        matchSearch
+      );
     });
   }, [products, search, category]);
 
@@ -71,22 +85,46 @@ export default function ProductsPage() {
 
   return (
     <>
-      <ProductHero
-  value={search}
-  onChange={setSearch}
-/>
+      <PageHeader
+        title="Produk Gorden"
+        description="Temukan berbagai pilihan model gorden berkualitas dengan desain modern, elegan, dan dapat disesuaikan untuk rumah, kantor, hotel, apartemen, sekolah, maupun berbagai kebutuhan interior lainnya."
+        image="/images/gallery/gordenn2.jpg"
+        breadcrumb={[
+          {
+            label: "Produk",
+          },
+        ]}
+      />
 
       {/* Search */}
-      <section className="border-b bg-white py-8">
-        <div className="container mx-auto max-w-7xl px-4">
+      <section className="border-b bg-stone-50 py-8">
+        <Container>
           <input
-            type="text"
+            type="search"
             placeholder="Cari produk gorden..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-xl border p-4 focus:border-amber-500 focus:outline-none"
+            onChange={(e) =>
+              setSearch(e.target.value)
+            }
+            className="
+              h-14
+              w-full
+              rounded-2xl
+              border
+              border-stone-200
+              bg-white
+              px-5
+              text-sm
+              shadow-sm
+              outline-none
+              transition
+
+              focus:border-primary
+              focus:ring-2
+              focus:ring-primary/20
+            "
           />
-        </div>
+        </Container>
       </section>
 
       {/* Category */}
@@ -97,24 +135,42 @@ export default function ProductsPage() {
       />
 
       {/* Count */}
-      <section className="container mx-auto max-w-7xl px-4 py-8">
-        <p className="text-gray-600">
-          Menampilkan{" "}
-          <span className="font-semibold text-amber-600">
-            {filteredProducts.length}
-          </span>{" "}
-          produk
-        </p>
+      <section className="bg-white py-8">
+        <Container>
+          <p className="text-stone-600">
+            Menampilkan{" "}
+            <span className="font-semibold text-primary">
+              {filteredProducts.length}
+            </span>{" "}
+            produk.
+          </p>
+        </Container>
       </section>
 
       {/* Content */}
       {loading ? (
-        <div className="py-20 text-center text-gray-500">
-          Memuat produk...
+        <div className="py-24 text-center">
+          <div
+            className="
+              mx-auto
+              mb-5
+              h-10
+              w-10
+              animate-spin
+              rounded-full
+              border-4
+              border-primary
+              border-t-transparent
+            "
+          />
+
+          <p className="text-stone-500">
+            Memuat produk...
+          </p>
         </div>
       ) : filteredProducts.length === 0 ? (
-        <div className="container mx-auto max-w-7xl px-4 pb-20">
-          <div className="rounded-3xl border-2 border-dashed border-stone-200 bg-white py-20 text-center">
+        <Container className="pb-20">
+          <div className="rounded-3xl border-2 border-dashed border-stone-200 bg-white py-20 text-center shadow-sm">
             <h3 className="text-2xl font-bold text-stone-700">
               Produk Tidak Ditemukan
             </h3>
@@ -123,7 +179,7 @@ export default function ProductsPage() {
               Coba ubah kata kunci pencarian atau filter kategori.
             </p>
           </div>
-        </div>
+        </Container>
       ) : (
         <>
           <ProductGrid
@@ -135,7 +191,9 @@ export default function ProductsPage() {
             items={filteredProducts}
             currentIndex={previewIndex}
             isOpen={openPreview}
-            onClose={() => setOpenPreview(false)}
+            onClose={() =>
+              setOpenPreview(false)
+            }
             onPrev={() =>
               setPreviewIndex((prev) =>
                 prev === 0
@@ -145,7 +203,8 @@ export default function ProductsPage() {
             }
             onNext={() =>
               setPreviewIndex((prev) =>
-                prev === filteredProducts.length - 1
+                prev ===
+                filteredProducts.length - 1
                   ? 0
                   : prev + 1
               )

@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation";
 
-import { materialService } from "@/lib/materialService";
-
+import PageHeader from "@/components/common/PageHeader";
 import MaterialDetail from "@/components/material/MaterialDetail";
+
+import { materialService } from "@/lib/materialService";
 
 interface PageProps {
   params: Promise<{
@@ -31,7 +32,8 @@ export async function generateMetadata({
       `Material ${material.name}`,
     openGraph: {
       title: material.name,
-      description: material.description ?? "",
+      description:
+        material.description ?? "",
       images: material.image
         ? [material.image]
         : [],
@@ -61,8 +63,25 @@ export default async function MaterialDetailPage({
   }
 
   return (
-    <main className="min-h-screen bg-stone-50">
-      <MaterialDetail material={material} />
-    </main>
+    <>
+      <PageHeader
+        title={material.name}
+        description={`Pelajari karakteristik, keunggulan, warna, dan spesifikasi material ${material.name} yang digunakan oleh Darsiti Gorden untuk menghasilkan tampilan interior yang elegan dan berkualitas.`}
+        image="/images/gallery/gordenn2.jpg"
+        breadcrumb={[
+          {
+            label: "Material",
+            href: "/material",
+          },
+          {
+            label: material.name,
+          },
+        ]}
+      />
+
+      <main className="bg-stone-50 py-12 lg:py-20">
+        <MaterialDetail material={material} />
+      </main>
+    </>
   );
 }

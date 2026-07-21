@@ -11,7 +11,7 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b bg-background/90 backdrop-blur-xl">
   <Container>
-    <div className="flex h-20 items-center justify-between">
+    <div className="flex h-16 items-center justify-between lg:h-20">
 
       {/* Logo */}
       <div className="w-64 shrink-0">
@@ -33,7 +33,7 @@ export default function Navbar() {
       </div>
 
       {/* Mobile */}
-      <div className="ml-auto lg:hidden">
+      <div className="lg:hidden">
         <NavbarMobile />
       </div>
 

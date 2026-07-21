@@ -10,19 +10,18 @@ export default function AdminButton() {
       className="
         group
         inline-flex
+        h-11
         items-center
-        gap-3
-        rounded-full
+        gap-2.5
+        rounded-xl
         border
         border-stone-200
-        bg-white/90
-        px-5
-        py-3
+        bg-white
+        px-4
         text-sm
-        font-semibold
+        font-medium
         text-stone-700
         shadow-sm
-        backdrop-blur
         transition-all
         duration-300
         hover:-translate-y-0.5
@@ -30,37 +29,40 @@ export default function AdminButton() {
         hover:bg-amber-500
         hover:text-white
         hover:shadow-lg
+        active:scale-95
         focus:outline-none
         focus:ring-2
-        focus:ring-amber-400
-        focus:ring-offset-2
+        focus:ring-amber-300
       "
     >
       <span
         className="
           flex
-          h-9
-          w-9
+          h-8
+          w-8
           items-center
           justify-center
-          rounded-full
+          rounded-lg
           bg-amber-100
-          text-amber-600
           transition-all
           duration-300
           group-hover:bg-white/20
-          group-hover:text-white
         "
       >
-        <Shield size={18} />
+        <Shield
+          size={17}
+          className="
+            text-amber-600
+            transition-colors
+            duration-300
+            group-hover:text-white
+          "
+        />
       </span>
 
-      <div className="flex flex-col leading-tight">
-        <span>Admin Panel</span>
-        <span className="text-xs font-normal text-stone-500 transition-colors group-hover:text-amber-100">
-          Secure Login
-        </span>
-      </div>
+      <span className="whitespace-nowrap">
+        Admin Panel
+      </span>
     </Link>
   );
 }

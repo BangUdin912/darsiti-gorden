@@ -15,11 +15,10 @@ export function useMaterials() {
 
   async function loadMaterials() {
     try {
-      const data = await materialService.getAll();
+      const data =
+    await materialService.getActive();
 
-      setMaterials(
-        data.filter((item) => item.is_active)
-      );
+setMaterials(data);
     } finally {
       setLoading(false);
     }

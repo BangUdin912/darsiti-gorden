@@ -2,7 +2,9 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import MaterialHero from "@/components/material/MaterialHero";
+import Container from "@/components/common/Container";
+import PageHeader from "@/components/common/PageHeader";
+
 import MaterialSearch from "@/components/material/MaterialSearch";
 import MaterialCategory from "@/components/material/MaterialCategory";
 import MaterialGrid from "@/components/material/MaterialGrid";
@@ -19,8 +21,6 @@ export default function MaterialPage() {
   const [loading, setLoading] = useState(true);
 
   const [search, setSearch] = useState("");
-
-  // kosong ("") = Semua
   const [category, setCategory] =
     useState<MaterialCategoryType | "">("");
 
@@ -32,18 +32,24 @@ export default function MaterialPage() {
     try {
       setLoading(true);
 
-      const data = await materialService.getActive();
+      const data =
+        await materialService.getActive();
 
       setMaterials(data);
     } catch (error) {
-      console.error("Failed to load materials:", error);
+      console.error(
+        "Failed to load materials:",
+        error
+      );
     } finally {
       setLoading(false);
     }
   }
 
   const filteredMaterials = useMemo(() => {
-    const keyword = search.toLowerCase().trim();
+    const keyword = search
+      .toLowerCase()
+      .trim();
 
     return materials.filter((item) => {
       const matchCategory =
@@ -51,8 +57,12 @@ export default function MaterialPage() {
         item.category === category;
 
       const matchSearch =
-        item.name.toLowerCase().includes(keyword) ||
-        item.category.toLowerCase().includes(keyword) ||
+        item.name
+          .toLowerCase()
+          .includes(keyword) ||
+        item.category
+          .toLowerCase()
+          .includes(keyword) ||
         (item.description ?? "")
           .toLowerCase()
           .includes(keyword) ||
@@ -63,46 +73,71 @@ export default function MaterialPage() {
           .toLowerCase()
           .includes(keyword);
 
-      return matchCategory && matchSearch;
+      return (
+        matchCategory &&
+        matchSearch
+      );
     });
   }, [materials, search, category]);
 
   return (
     <>
-      {/* HERO */}
-      <MaterialHero />
+      <PageHeader
+        title="Material Gorden"
+        description="Temukan berbagai pilihan material gorden berkualitas dengan beragam tekstur, warna, dan karakter yang dapat disesuaikan dengan kebutuhan rumah, kantor, hotel, apartemen, maupun proyek interior Anda."
+        image="/images/gallery/gordenn2.jpg"
+        breadcrumb={[
+          {
+            label: "Material",
+          },
+        ]}
+      />
 
-      {/* SEARCH */}
-      <section className="border-b bg-white py-8">
-        <div className="container mx-auto max-w-7xl px-4">
+      {/* Search */}
+      <section className="border-b bg-stone-50 py-8">
+        <Container>
           <MaterialSearch
             value={search}
             onChange={setSearch}
           />
-        </div>
+        </Container>
       </section>
 
-      {/* CATEGORY */}
+      {/* Category */}
       <MaterialCategory
         value={category}
         onChange={setCategory}
       />
 
-      {/* COUNT */}
-      <section className="container mx-auto max-w-7xl px-4 py-8">
-        <p className="text-gray-600">
-          Menampilkan{" "}
-          <span className="font-semibold text-amber-600">
-            {filteredMaterials.length}
-          </span>{" "}
-          material
-        </p>
+      {/* Count */}
+      <section className="bg-white py-8">
+        <Container>
+          <p className="text-stone-600">
+            Menampilkan{" "}
+            <span className="font-semibold text-primary">
+              {filteredMaterials.length}
+            </span>{" "}
+            material.
+          </p>
+        </Container>
       </section>
 
-      {/* LOADING */}
+      {/* Content */}
       {loading ? (
-        <div className="py-20 text-center">
-          <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-amber-500 border-t-transparent" />
+        <div className="py-24 text-center">
+          <div
+            className="
+              mx-auto
+              mb-5
+              h-10
+              w-10
+              animate-spin
+              rounded-full
+              border-4
+              border-primary
+              border-t-transparent
+            "
+          />
 
           <p className="text-stone-500">
             Memuat material...

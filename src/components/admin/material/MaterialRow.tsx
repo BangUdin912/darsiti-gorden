@@ -42,11 +42,24 @@ export default function MaterialRow({
 </td>
 
   {/* Nama */}
-  <td className="p-4 text-center">
-    <p className="font-semibold text-stone-800">
-      {material.name}
-    </p>
-  </td>
+{/* Nama */}
+<td className="p-4 text-center">
+
+  <p
+    title={material.name}
+    className="
+      mx-auto
+      max-w-[200px]
+      truncate
+      cursor-help
+      font-semibold
+      text-stone-800
+    "
+  >
+    {material.name}
+  </p>
+
+</td>
 
   {/* Kategori */}
   <td className="p-4 text-center">

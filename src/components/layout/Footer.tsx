@@ -12,126 +12,181 @@ export default function Footer() {
   return (
     <>
       <footer className="bg-stone-900 text-white">
-        <div className="container mx-auto px-6 py-16">
+  <div className="container mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
 
-          {/* Grid */}
-          <div className="grid gap-10 md:grid-cols-4">
+    <div className="grid grid-cols-1 gap-10 border-b border-stone-800 pb-12 sm:grid-cols-2 lg:grid-cols-4">
 
-            {/* Brand */}
-            <div>
-              <h2 className="text-2xl font-bold">
-                Darsiti Gorden
-              </h2>
+      {/* Brand */}
+      <div className="lg:pr-6">
+        <h2 className="text-2xl font-bold">
+          Darsiti Gorden
+        </h2>
 
-              <p className="mt-4 text-sm leading-relaxed text-stone-300">
-                Spesialis gorden custom premium untuk rumah,
-                hotel, kantor, dan masjid. Mengutamakan
-                kualitas, presisi, dan kepuasan pelanggan.
-              </p>
-            </div>
+        <p className="mt-4 text-sm leading-7 text-stone-300">
+          Spesialis gorden custom premium untuk rumah,
+          hotel, kantor, masjid, apartemen, dan berbagai
+          kebutuhan interior lainnya.
+        </p>
+      </div>
 
-            {/* Navigasi */}
-            <div>
-              <h3 className="mb-4 font-semibold">
-                Navigasi
-              </h3>
+      {/* Navigasi */}
+      <div>
+        <h3 className="mb-5 text-lg font-semibold">
+          Navigasi
+        </h3>
 
-              <ul className="space-y-2 text-sm text-stone-300">
-                <li>
-                  <Link href="/">Home</Link>
-                </li>
+        <ul className="space-y-3 text-sm text-stone-300">
 
-                <li>
-                  <Link href="/about">
-                    About
-                  </Link>
-                </li>
+          <li>
+            <Link
+              href="/"
+              className="transition hover:text-white"
+            >
+              Home
+            </Link>
+          </li>
 
-                <li>
-                  <Link href="/products">
-                    Produk
-                  </Link>
-                </li>
+          <li>
+            <Link
+              href="/about"
+              className="transition hover:text-white"
+            >
+              About
+            </Link>
+          </li>
 
-                <li>
-                  <Link href="/material">
-                    Material
-                  </Link>
-                </li>
+          <li>
+            <Link
+              href="/products"
+              className="transition hover:text-white"
+            >
+              Produk
+            </Link>
+          </li>
 
-                <li>
-                  <Link href="/gallery">
-                    Gallery
-                  </Link>
-                </li>
+          <li>
+            <Link
+              href="/material"
+              className="transition hover:text-white"
+            >
+              Material
+            </Link>
+          </li>
 
-                <li>
-                  <Link href="/contact">
-                    Kontak
-                  </Link>
-                </li>
-              </ul>
-            </div>
+          <li>
+            <Link
+              href="/gallery"
+              className="transition hover:text-white"
+            >
+              Gallery
+            </Link>
+          </li>
 
-            {/* Layanan */}
-            <div>
-              <h3 className="mb-4 font-semibold">
-                Layanan
-              </h3>
+          <li>
+            <Link
+              href="/contact"
+              className="transition hover:text-white"
+            >
+              Kontak
+            </Link>
+          </li>
 
-              <ul className="space-y-2 text-sm text-stone-300">
-                <li>Gorden Custom</li>
-                <li>Instalasi Profesional</li>
-                <li>Konsultasi Interior</li>
-                <li>Survey Lokasi</li>
-                <li>Desain & Pengukuran</li>
-              </ul>
-            </div>
+        </ul>
+      </div>
 
-            {/* Kontak */}
-            <div>
-              <h3 className="mb-4 font-semibold">
-                Kontak
-              </h3>
+      {/* Layanan */}
+      <div>
+        <h3 className="mb-5 text-lg font-semibold">
+          Layanan
+        </h3>
 
-              <p className="text-sm text-stone-300">
-                Purwokerto, Jawa Tengah
-              </p>
+        <ul className="space-y-3 text-sm text-stone-300">
 
-              <p className="mt-2 text-sm text-stone-300">
-                WhatsApp: 6281915118782
-              </p>
+          <li>Gorden Custom</li>
+          <li>Instalasi Profesional</li>
+          <li>Konsultasi Interior</li>
+          <li>Survey & Pengukuran</li>
+          <li>Desain Interior</li>
 
-              <button
-                type="button"
-                onClick={() =>
-                  setOpenConsultation(true)
-                }
-                className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#25D366] px-5 py-2 text-sm font-semibold text-white transition-all duration-300 hover:scale-105 hover:bg-[#1EBE5D] hover:shadow-lg"
-              >
-                Chat WhatsApp
-              </button>
-            </div>
+        </ul>
+      </div>
 
-          </div>
+      {/* Kontak */}
+      <div>
+        <h3 className="mb-5 text-lg font-semibold">
+          Hubungi Kami
+        </h3>
 
-          {/* Divider */}
-          <div className="mt-12 flex flex-col items-center justify-between border-t border-stone-700 pt-6 text-sm text-stone-400 md:flex-row">
+        <div className="space-y-3 text-sm text-stone-300">
 
-            <p>
-              © {new Date().getFullYear()} Darsiti Gorden.
-              All rights reserved.
-            </p>
+          <p>Purwokerto, Jawa Tengah</p>
 
-            <p className="mt-2 md:mt-0">
-              Created by Nur Khoerudin
-            </p>
+          <p>WhatsApp</p>
 
-          </div>
+          <p className="font-medium text-white">
+            +62 819-1511-8782
+          </p>
 
         </div>
-      </footer>
 
+        <button
+          type="button"
+          onClick={() =>
+            setOpenConsultation(true)
+          }
+          className="
+            mt-6
+            flex
+            w-full
+            items-center
+            justify-center
+            rounded-xl
+            bg-[#25D366]
+            px-5
+            py-3
+            text-sm
+            font-semibold
+            text-white
+            transition
+            hover:bg-[#1EBE5D]
+            hover:shadow-lg
+            sm:w-auto
+          "
+        >
+          Chat WhatsApp
+        </button>
+      </div>
+
+    </div>
+
+    {/* Bottom */}
+    <div
+      className="
+        mt-8
+        flex
+        flex-col
+        items-center
+        gap-3
+        text-center
+        text-sm
+        text-stone-400
+        lg:flex-row
+        lg:justify-between
+        lg:text-left
+      "
+    >
+      <p>
+        © {new Date().getFullYear()} Darsiti Gorden.
+        All rights reserved.
+      </p>
+
+      <p>
+        Created with ❤️ by Nur Khoerudin
+      </p>
+    </div>
+
+  </div>
+</footer>
       <ConsultationModal
         open={openConsultation}
         onClose={() =>

@@ -22,11 +22,12 @@ export function useGlobalSearch() {
     useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    if (!keyword.trim()) {
-      setResults([]);
-      setLoading(false);
-      return;
-    }
+if (!keyword.trim()) {
+  setResults([]);
+  setLoading(false);
+  setOpen(false);
+  return;
+}
 
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
@@ -42,9 +43,9 @@ export function useGlobalSearch() {
         setResults(response.results);
       } catch (err) {
         console.error(
-          "Global Search:",
-          err
-        );
+    "[useGlobalSearch]",
+    err
+);
 
         setResults([]);
       } finally {

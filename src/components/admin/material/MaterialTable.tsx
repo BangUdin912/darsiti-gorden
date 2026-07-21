@@ -25,12 +25,16 @@ export default function MaterialTable() {
   const [selected, setSelected] = useState<Material | null>(null);
   const [deleteItem, setDeleteItem] = useState<Material | null>(null);
 
+
   /**
    * TYPE GUARD
    */
-  function isMaterialArray(data: unknown): data is Material[] {
+  function isMaterialArray(
+    data: unknown
+  ): data is Material[] {
     return Array.isArray(data);
   }
+
 
   /**
    * FETCH DATA
@@ -46,141 +50,351 @@ export default function MaterialTable() {
       } else {
         setMaterials([]);
       }
-    } catch (err) {
-      console.error("fetchMaterial:", err);
+
+    } catch (error) {
+      console.error(
+        "fetchMaterial error:",
+        error
+      );
+
       setMaterials([]);
+
     } finally {
       setLoading(false);
     }
   }
 
+
   useEffect(() => {
     fetchMaterial();
   }, []);
 
+
+
   /**
-   * FILTER
+   * FILTER DATA
    */
   const filteredMaterials = useMemo(() => {
-    return materials.filter((item) => {
-      const matchSearch = item.name
-        .toLowerCase()
-        .includes(search.toLowerCase());
 
-      const matchCategory = category
-        ? item.category === category
-        : true;
+    return materials.filter((item) => {
+
+      const matchSearch =
+        item.name
+          .toLowerCase()
+          .includes(
+            search.toLowerCase()
+          );
+
+
+      const matchCategory =
+        category
+          ? item.category === category
+          : true;
+
 
       const matchFeatured =
         featured === null
           ? true
           : item.featured === featured;
 
+
       return (
         matchSearch &&
         matchCategory &&
         matchFeatured
       );
+
     });
-  }, [materials, search, category, featured]);
+
+  }, [
+    materials,
+    search,
+    category,
+    featured,
+  ]);
+
+
 
   return (
     <div className="space-y-6">
+
 
       {/* FILTER */}
       <MaterialFilter
         search={search}
         onSearchChange={setSearch}
+
         category={category}
         onCategoryChange={setCategory}
+
         featured={featured}
         onFeaturedChange={setFeatured}
-
       />
 
+
+
       {/* TABLE */}
-      <div className="overflow-hidden rounded-2xl border bg-white">
+      <div
+        className="
+          overflow-hidden
+          rounded-2xl
+          border
+          bg-white
+        "
+      >
 
-        <table className="w-full text-left text-sm">
+        <div
+          className="
+            w-full
+            overflow-x-auto
+          "
+        >
 
-<thead className="bg-stone-100">
-  <tr>
-    <th className="w-16 p-3 text-center">No</th>
-    <th className="p-3 text-center">Gambar</th>
-    <th className="p-3 text-center">Nama Bahan</th>
-    <th className="p-3 text-center">Kategori</th>
-    <th className="p-3 text-center">Warna</th>
-    <th className="p-3 text-center">Featured</th>
-    <th className="p-3 text-center">Aksi</th>
-  </tr>
-</thead>
+          <table
+            className="
+              min-w-[900px]
+              w-full
+              text-left
+              text-sm
+              whitespace-nowrap
+            "
+          >
 
-          <tbody>
+            <thead
+              className="
+                bg-stone-100
+                text-stone-700
+              "
+            >
 
-            {loading ? (
               <tr>
-                <td colSpan={6} className="p-6 text-center">
-                  Memuat data...
-                </td>
-              </tr>
-            ) : filteredMaterials.length === 0 ? (
-              <tr>
-                <td colSpan={6} className="p-6 text-center">
-                  Tidak ada data bahan.
-                </td>
-              </tr>
-            ) : (
-              filteredMaterials.map((item, index) => (
-  <MaterialRow
-    key={item.id}
-    no={index + 1}
-    material={item}
-    onEdit={() => setSelected(item)}
-    onDelete={() => setDeleteItem(item)}
-  />
-))
-            )}
 
-          </tbody>
+                <th
+                  className="
+                    w-16
+                    p-3
+                    text-center
+                    font-semibold
+                  "
+                >
+                  No
+                </th>
 
-        </table>
+
+                <th
+                  className="
+                    p-3
+                    text-center
+                    font-semibold
+                  "
+                >
+                  Gambar
+                </th>
+
+
+                <th
+                  className="
+                    p-3
+                    text-center
+                    font-semibold
+                  "
+                >
+                  Nama Bahan
+                </th>
+
+
+                <th
+                  className="
+                    p-3
+                    text-center
+                    font-semibold
+                  "
+                >
+                  Kategori
+                </th>
+
+
+                <th
+                  className="
+                    p-3
+                    text-center
+                    font-semibold
+                  "
+                >
+                  Warna
+                </th>
+
+
+                <th
+                  className="
+                    p-3
+                    text-center
+                    font-semibold
+                  "
+                >
+                  Featured
+                </th>
+
+
+                <th
+                  className="
+                    p-3
+                    text-center
+                    font-semibold
+                  "
+                >
+                  Aksi
+                </th>
+
+              </tr>
+
+            </thead>
+
+
+
+            <tbody>
+
+
+              {loading && (
+
+                <tr>
+                  <td
+                    colSpan={7}
+                    className="
+                      p-6
+                      text-center
+                      text-stone-500
+                    "
+                  >
+                    Memuat data...
+                  </td>
+                </tr>
+
+              )}
+
+
+
+              {!loading &&
+                filteredMaterials.length === 0 && (
+
+                <tr>
+                  <td
+                    colSpan={7}
+                    className="
+                      p-6
+                      text-center
+                      text-stone-500
+                    "
+                  >
+                    Tidak ada data bahan.
+                  </td>
+                </tr>
+
+              )}
+
+
+
+              {!loading &&
+                filteredMaterials.length > 0 &&
+
+                filteredMaterials.map(
+                  (item, index) => (
+
+                    <MaterialRow
+                      key={item.id}
+
+                      no={index + 1}
+
+                      material={item}
+
+                      onEdit={() =>
+                        setSelected(item)
+                      }
+
+                      onDelete={() =>
+                        setDeleteItem(item)
+                      }
+                    />
+
+                  )
+                )
+              }
+
+
+            </tbody>
+
+          </table>
+
+        </div>
 
       </div>
 
+
+
+
       {/* CREATE */}
       {openCreate && (
+
         <MaterialCreate
-          onClose={() => setOpenCreate(false)}
+          onClose={() =>
+            setOpenCreate(false)
+          }
+
           onSuccess={() => {
             setOpenCreate(false);
             fetchMaterial();
           }}
         />
+
       )}
+
+
+
 
       {/* EDIT */}
       {selected && (
+
         <MaterialEdit
+
           material={selected}
-          onClose={() => setSelected(null)}
+
+          onClose={() =>
+            setSelected(null)
+          }
+
           onSuccess={() => {
             setSelected(null);
             fetchMaterial();
           }}
+
         />
+
       )}
+
+
+
+
 
       {/* DELETE */}
       {deleteItem && (
+
         <MaterialDeleteDialog
+
           material={deleteItem}
-          onClose={() => setDeleteItem(null)}
+
+          onClose={() =>
+            setDeleteItem(null)
+          }
+
           onSuccess={() => {
             setDeleteItem(null);
             fetchMaterial();
           }}
+
         />
+
       )}
+
 
     </div>
   );

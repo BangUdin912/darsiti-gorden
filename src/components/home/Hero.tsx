@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
+import Badge from "@/components/common/Badge";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -34,9 +34,9 @@ export default function Hero() {
         <div className="relative container mx-auto flex min-h-[92vh] items-center px-6">
           <div className="max-w-3xl">
             {/* Badge */}
-            <span className="inline-flex rounded-full border border-white/20 bg-white/10 px-5 py-2 text-sm font-semibold text-white backdrop-blur">
+            <Badge className="inline-flex rounded-full border border-white/20 bg-white/10 px-5 py-2 text-sm font-semibold text-white backdrop-blur">
               ⭐ Spesialis Gorden Custom Purwokerto
-            </span>
+            </Badge>
 
             {/* Heading */}
             <h1 className="mt-8 text-5xl font-bold leading-tight text-white lg:text-7xl">

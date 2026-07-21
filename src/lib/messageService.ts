@@ -1,14 +1,9 @@
-import { createClient } from "@supabase/supabase-js";
-import type { Message, CreateMessage } from "@/types/message";
-
-// ======================
-// SUPABASE CLIENT
-// ======================
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-export const supabase = createClient(supabaseUrl, supabaseKey);
+import { supabase } from "@/lib/supabaseClient";
+import type {
+  Message,
+  CreateMessage,
+  NotificationMessage,
+} from "@/types/message";
 
 // ======================
 // MESSAGE SERVICE
@@ -68,16 +63,76 @@ export const messageService = {
     return data ? mapMessage(data) : null;
   },
 
+async getLatestNotifications(): Promise<NotificationMessage[]> {
+  const { data, error } = await supabase
+    .from("messages")
+    .select(`
+      id,
+      name,
+      product_name,
+      message,
+      created_at,
+      read
+    `)
+    .order("created_at", {
+      ascending: false,
+    })
+    .limit(20);
+
+  if (error) {
+    console.error("[getLatestNotifications]", error);
+    return [];
+  }
+
+  return (data ?? []).map((item) => ({
+    id: item.id,
+    name: item.name,
+    productName: item.product_name ?? undefined,
+    message: item.message ?? "",
+    createdAt: item.created_at,
+    read: item.read ?? false,
+  }));
+},
+
+async markAsRead(id: string): Promise<void> {
+  const { error } = await supabase
+    .from("messages")
+    .update({
+      read: true,
+    })
+    .eq("id", id);
+
+  if (error) {
+    console.error("[markAsRead]", error);
+    throw new Error(error.message);
+  }
+},
+
+async markAllAsRead(): Promise<void> {
+  const { error } = await supabase
+    .from("messages")
+    .update({
+      read: true,
+    })
+    .eq("read", false);
+
+  if (error) {
+    console.error("[markAllAsRead]", error);
+    throw new Error(error.message);
+  }
+},
+
   /**
    * CREATE MESSAGE
    */
   async create(message: CreateMessage): Promise<Message> {
     const { data, error } = await supabase
       .from("messages")
-      .insert({
-        ...mapPayload(message),
-        status: "new",
-      })
+.insert({
+  ...mapPayload(message),
+  status: "new",
+  read: false,
+})
       .select()
       .single();
 
@@ -159,33 +214,40 @@ export const messageService = {
       return [];
     }
 
-    return data.map(mapMessage);
+    return (data ?? []).map(mapMessage);
   },
 
   async search(keyword: string): Promise<Message[]> {
-    const { data, error } = await supabase
-      .from("messages")
-      .select("*")
-      .or(
-`
-name.ilike.%${keyword}%,
-phone.ilike.%${keyword}%,
-email.ilike.%${keyword}%,
-address.ilike.%${keyword}%,
-service.ilike.%${keyword}%,
-product_name.ilike.%${keyword}%,
-material.ilike.%${keyword}%
-`
-)
-      .order("created_at", {
-        ascending: false,
-      });
+    const query = keyword.trim();
 
-    if (error) {
-      return [];
-    }
+if (!query) return [];
 
-    return data.map(mapMessage);
+const { data, error } = await supabase
+  .from("messages")
+  .select("*")
+  .or(
+    [
+      `name.ilike.%${query}%`,
+      `phone.ilike.%${query}%`,
+      `email.ilike.%${query}%`,
+      `address.ilike.%${query}%`,
+      `service.ilike.%${query}%`,
+      `product_name.ilike.%${query}%`,
+      `material.ilike.%${query}%`,
+      `message.ilike.%${query}%`,
+    ].join(",")
+  )
+  .order("created_at", {
+    ascending: false,
+  })
+  .limit(20);
+
+if (error) {
+  console.error("[message.search]", error);
+  return [];
+}
+
+return (data ?? []).map(mapMessage);
   },
 
   /**
@@ -241,7 +303,7 @@ async delete(id: string): Promise<boolean> {
         return [];
     }
 
-    return data.map(mapMessage);
+    return (data ?? []).map(mapMessage);
 },
 
 async getByProduct(
@@ -260,7 +322,7 @@ async getByProduct(
         return [];
     }
 
-    return data.map(mapMessage);
+    return (data ?? []).map(mapMessage);
 },
 
 async getByService(
@@ -279,7 +341,7 @@ async getByService(
         return [];
     }
 
-    return data.map(mapMessage);
+    return (data ?? []).map(mapMessage);
 },
 
   /**
@@ -321,6 +383,7 @@ type MessageRow = {
   service: string | null;
   message: string | null;
   material: string | null;
+  read: boolean | null;
   status: "new" | "processing" | "done";
   created_at: string;
   updated_at: string;
@@ -337,7 +400,10 @@ function mapMessage(row: MessageRow): Message {
     service: row.service ?? undefined,
     message: row.message ?? "",
     material: row.material ?? undefined,
+
     status: row.status,
+    read: row.read ?? false,
+
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
