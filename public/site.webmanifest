@@ -1,0 +1,38 @@
+{
+  "name": "Darsiti Gorden",
+  "short_name": "Darsiti",
+  "description": "Spesialis pembuatan dan pemasangan gorden custom berkualitas di Purwokerto dan sekitarnya.",
+  "lang": "id-ID",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFFFFF",
+  "theme_color": "#C59D5F",
+  "categories": [
+    "business",
+    "shopping",
+    "home",
+    "lifestyle"
+  ],
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

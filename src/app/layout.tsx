@@ -2,6 +2,7 @@ import type {
   Metadata,
   Viewport,
 } from "next";
+
 import {
   Inter,
   Playfair_Display,
@@ -15,6 +16,8 @@ import Navbar from "@/components/layout/Navbar";
 import ScrollToTop from "@/components/layout/ScrollToTop";
 import WhatsAppFloat from "@/components/layout/WhatsAppFloat";
 
+import LocalBusinessSchema from "@/components/seo/LocalBusinessSchema";
+
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -27,10 +30,11 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
+const SITE_URL =
+  "https://www.gordenmurahpurwokerto.store";
+
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    "https://www.gordenmurahpurwokerto.store"
-  ),
+  metadataBase: new URL(SITE_URL),
 
   title: {
     default:
@@ -39,17 +43,15 @@ export const metadata: Metadata = {
   },
 
   description:
-    "Darsiti Gorden melayani pembuatan dan pemasangan gorden custom untuk rumah, kantor, hotel, masjid, apartemen, villa, cafe, dan berbagai kebutuhan interior di Purwokerto dan sekitarnya.",
+    "Darsiti Gorden melayani jasa pembuatan dan pemasangan gorden custom berkualitas untuk rumah, kantor, hotel, apartemen, villa, cafe, masjid, sekolah, serta berbagai kebutuhan interior di Purwokerto dan sekitarnya.",
 
   keywords: [
     "gorden purwokerto",
     "gorden murah purwokerto",
     "gorden custom",
-    "gorden rumah",
-    "toko gorden termurah purwokerto",
     "toko gorden purwokerto",
     "toko gorden murah",
-    "gorden murah",
+    "gorden rumah",
     "gorden kantor",
     "gorden hotel",
     "gorden masjid",
@@ -75,19 +77,44 @@ export const metadata: Metadata = {
 
   applicationName: "Darsiti Gorden",
 
+  generator: "Next.js",
+
   category: "Business",
 
+  classification:
+    "Curtain Store & Interior Decoration",
+
+  abstract:
+    "Spesialis jasa pembuatan dan pemasangan gorden custom premium di Purwokerto.",
+
   alternates: {
-    canonical: "/",
+    canonical: SITE_URL,
+  },
+
+  manifest: "/site.webmanifest",
+
+  referrer: "origin-when-cross-origin",
+
+  formatDetection: {
+    telephone: false,
+    email: false,
+    address: false,
+  },
+
+  verification: {
+    // Isi setelah website didaftarkan ke Google Search Console
+    google: "",
   },
 
   robots: {
     index: true,
     follow: true,
+    nocache: false,
 
     googleBot: {
       index: true,
       follow: true,
+      noimageindex: false,
       "max-image-preview": "large",
       "max-snippet": -1,
       "max-video-preview": -1,
@@ -99,22 +126,24 @@ export const metadata: Metadata = {
 
     locale: "id_ID",
 
-    url: "https://www.gordenmurahpurwokerto.store",
+    url: SITE_URL,
 
     siteName: "Darsiti Gorden",
+
+    countryName: "Indonesia",
 
     title:
       "Darsiti Gorden | Spesialis Gorden Custom Purwokerto",
 
     description:
-      "Spesialis pembuatan dan pemasangan gorden custom premium untuk rumah, kantor, hotel, masjid, apartemen, cafe, dan villa.",
+      "Jasa pembuatan dan pemasangan gorden custom premium untuk rumah, kantor, hotel, apartemen, villa, cafe, dan masjid di Purwokerto.",
 
     images: [
       {
         url: "/images/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Darsiti Gorden",
+        alt: "Darsiti Gorden Purwokerto",
       },
     ],
   },
@@ -126,7 +155,7 @@ export const metadata: Metadata = {
       "Darsiti Gorden | Spesialis Gorden Custom Purwokerto",
 
     description:
-      "Jasa pembuatan dan pemasangan gorden premium di Purwokerto.",
+      "Jasa pembuatan dan pemasangan gorden custom premium di Purwokerto.",
 
     images: [
       "/images/og-image.jpg",
@@ -138,18 +167,54 @@ export const metadata: Metadata = {
       {
         url: "/favicon.ico",
       },
+      {
+        url: "/android-chrome-192x192.png",
+        type: "image/png",
+        sizes: "192x192",
+      },
+      {
+        url: "/android-chrome-512x512.png",
+        type: "image/png",
+        sizes: "512x512",
+      },
     ],
 
     shortcut: "/favicon.ico",
 
-    apple: "/apple-touch-icon.png",
+    apple: [
+      {
+        url: "/apple-touch-icon.png",
+        sizes: "180x180",
+      },
+    ],
+  },
+
+  appleWebApp: {
+    capable: true,
+    title: "Darsiti Gorden",
+    statusBarStyle: "default",
+  },
+
+  appLinks: {
+    web: {
+      url: SITE_URL,
+      should_fallback: true,
+    },
+  },
+
+  other: {
+    google: "notranslate",
   },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
+
   initialScale: 1,
+
   themeColor: "#C59D5F",
+
+  colorScheme: "light",
 };
 
 export default function RootLayout({
@@ -172,6 +237,9 @@ export default function RootLayout({
           antialiased
         "
       >
+        {/* Structured Data */}
+        <LocalBusinessSchema />
+
         {/* Header */}
         <AnnouncementBar />
         <Navbar />
@@ -182,7 +250,7 @@ export default function RootLayout({
         {/* Floating Button */}
         <WhatsAppFloat />
 
-        {/* Scroll To Top */}
+        {/* Utility */}
         <ScrollToTop />
 
         {/* Footer */}
