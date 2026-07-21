@@ -102,7 +102,7 @@ class AdminSearchService {
           type: "gallery",
           title: item.title,
           subtitle: item.location,
-          image: item.image_url,
+          image: item.image,
           href: `/admin/gallery/${item.id}/edit`,
         });
       });

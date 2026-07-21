@@ -47,7 +47,7 @@ export default function GalleryForm({
     setLocation(initialValues.location ?? "");
     setDescription(initialValues.description ?? "");
     setFeatured(initialValues.featured ?? false);
-    setPreview(initialValues.image_url ?? "");
+    setPreview(initialValues.image ?? "");
     setFile(null);
   }, [initialValues]);
 
@@ -108,7 +108,7 @@ export default function GalleryForm({
     try {
       setLoading(true);
 
-      let image_url = initialValues?.image_url ?? "";
+      let image = initialValues?.image ?? "";
       let image_path = initialValues?.image_path ?? "";
 
       if (file) {
@@ -123,7 +123,7 @@ export default function GalleryForm({
 
         const upload = await storageService.upload(file);
 
-        image_url = upload.url;
+        image = upload.url;
         image_path = upload.path;
       }
 
@@ -133,7 +133,7 @@ export default function GalleryForm({
         location: safeLocation,
         description: safeDesc,
         featured,
-        image_url,
+        image,
         image_path,
       };
 

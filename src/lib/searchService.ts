@@ -195,7 +195,7 @@ private async searchMaterials(
       name,
       category,
       description,
-      image_url,
+      image,
       created_at
     `)
     .eq(
@@ -254,7 +254,7 @@ private async searchMaterials(
       slug: item.slug,
 
       image:
-        item.image_url,
+        item.image,
 
       href:
         `/admin/material/${item.slug}`,
@@ -282,7 +282,7 @@ private async searchMaterials(
         category,
         location,
         description,
-        image_url,
+        image,
         created_at
       `)
       .or(
@@ -332,7 +332,7 @@ private async searchMaterials(
 
         slug:item.slug,
 
-        image:item.image_url,
+        image:item.image,
 
         href:
           `/admin/gallery/${item.slug}`,
