@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import PageHeader from "@/components/common/PageHeader";
@@ -13,7 +14,7 @@ interface PageProps {
 
 export async function generateMetadata({
   params,
-}: PageProps) {
+}: PageProps): Promise<Metadata> {
   const { slug } = await params;
 
   const material =
@@ -22,21 +23,78 @@ export async function generateMetadata({
   if (!material) {
     return {
       title: "Material Tidak Ditemukan",
+      description:
+        "Material yang Anda cari tidak ditemukan.",
+      robots: {
+        index: false,
+        follow: false,
+      },
     };
   }
 
+  const title = `${material.name} | Darsiti Gorden Purwokerto`;
+
+  const description =
+    material.description ??
+    `${material.name} merupakan salah satu material premium yang digunakan Darsiti Gorden Purwokerto untuk menghasilkan gorden berkualitas tinggi, elegan, dan tahan lama.`;
+
   return {
-    title: `${material.name} | Darsiti Gorden`,
-    description:
-      material.description ??
-      `Material ${material.name}`,
+    title,
+    description,
+
+    keywords: [
+      material.name,
+      "Material Gorden",
+      "Kain Gorden",
+      "Gorden Purwokerto",
+      "Darsiti Gorden",
+      "Blackout",
+      "Vitrase",
+      "Interior Rumah",
+      "Dekorasi Interior",
+    ],
+
+    alternates: {
+      canonical: `/material/${material.slug}`,
+    },
+
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+      },
+    },
+
     openGraph: {
-      title: material.name,
-      description:
-        material.description ?? "",
-      images: material.image
-        ? [material.image]
-        : [],
+      title,
+      description,
+      url: `/material/${material.slug}`,
+      siteName: "Darsiti Gorden",
+      locale: "id_ID",
+      type: "website",
+
+      images: [
+        {
+          url:
+            material.image ||
+            "/images/og-image.jpg",
+          width: 1200,
+          height: 630,
+          alt: material.name,
+        },
+      ],
+    },
+
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [
+        material.image ||
+          "/images/og-image.jpg",
+      ],
     },
   };
 }
@@ -67,7 +125,10 @@ export default async function MaterialDetailPage({
       <PageHeader
         title={material.name}
         description={`Pelajari karakteristik, keunggulan, warna, dan spesifikasi material ${material.name} yang digunakan oleh Darsiti Gorden untuk menghasilkan tampilan interior yang elegan dan berkualitas.`}
-        image="/images/gallery/gordenn2.jpg"
+        image={
+          material.image ||
+          "/images/gallery/gordenn2.jpg"
+        }
         breadcrumb={[
           {
             label: "Material",

@@ -12,6 +12,14 @@ import GalleryFilter from "@/components/gallery/GalleryFilter";
 import GalleryGrid from "@/components/gallery/GalleryGrid";
 import GalleryLightbox from "@/components/gallery/GalleryLightbox";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Gallery Pemasangan Gorden",
+  description:
+    "Lihat hasil pemasangan gorden custom Darsiti Gorden pada rumah, hotel, kantor, villa, cafe, apartemen, dan berbagai proyek interior lainnya.",
+};
+
 export default function GalleryPage() {
   const [gallery, setGallery] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(true);

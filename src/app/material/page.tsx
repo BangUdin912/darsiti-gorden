@@ -10,6 +10,13 @@ import MaterialCategory from "@/components/material/MaterialCategory";
 import MaterialGrid from "@/components/material/MaterialGrid";
 
 import { materialService } from "@/lib/materialService";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Material Gorden Premium",
+  description:
+    "Berbagai pilihan bahan gorden premium berkualitas untuk rumah, hotel, kantor, apartemen, villa, dan masjid.",
+};
 
 import type {
   Material,

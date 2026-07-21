@@ -4,6 +4,14 @@ import { useState } from "react";
 
 import ConsultationModal from "@/components/contact/ConsultationModal";
 
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "FAQ Gorden Custom",
+  description:
+    "Temukan jawaban mengenai harga, pemasangan, survey, pilihan bahan, perawatan, dan proses pemesanan gorden custom Darsiti Gorden.",
+};
+
 const faqs = [
   {
     q: "Apakah bisa custom ukuran sesuai ruangan?",

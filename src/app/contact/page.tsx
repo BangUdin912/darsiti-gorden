@@ -3,10 +3,12 @@ import PageHeader from "@/components/common/PageHeader";
 import ContactForm from "@/components/contact/ContactForm";
 import GoogleMaps from "@/components/contact/GoogleMaps";
 
-export const metadata = {
-  title: "Kontak | Darsiti Gorden Purwokerto",
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Hubungi Darsiti Gorden",
   description:
-    "Hubungi Darsiti Gorden Purwokerto untuk konsultasi gratis, survey lokasi, pengukuran, pemilihan material, hingga pemasangan gorden berkualitas untuk rumah, kantor, hotel, apartemen, sekolah, dan berbagai proyek lainnya.",
+    "Hubungi Darsiti Gorden untuk konsultasi gratis, survey lokasi, dan pemesanan gorden custom di Purwokerto dan sekitarnya.",
 };
 
 export default function ContactPage() {

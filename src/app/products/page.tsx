@@ -11,6 +11,13 @@ import { productService } from "@/lib/productService";
 import CategoryFilter from "@/components/product/CategoryFilter";
 import ProductGrid from "@/components/product/ProductGrid";
 import ProductLightbox from "@/components/product/ProductLightbox";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Produk Gorden Custom",
+  description:
+    "Lihat koleksi gorden custom Darsiti Gorden mulai dari Blackout, Vitrase, Roller Blind, Vertical Blind hingga berbagai aksesoris gorden premium.",
+};
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
