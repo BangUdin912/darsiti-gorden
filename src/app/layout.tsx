@@ -47,6 +47,8 @@ export const metadata: Metadata = {
 
   keywords: [
     "gorden purwokerto",
+    "toko gorden terdekat",
+    "toko terdekat",
     "gorden murah purwokerto",
     "gorden custom",
     "toko gorden purwokerto",

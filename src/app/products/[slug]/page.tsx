@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import PageHeader from "@/components/common/PageHeader";
 import ProductDetail from "@/components/product/ProductDetail";
+import ProductSchema from "@/components/seo/ProductSchema";
 
 import { productService } from "@/lib/productService";
 
@@ -46,13 +47,9 @@ export async function generateMetadata({
 
     keywords: [
       product.name,
-
       ...product.category,
-
       ...product.room,
-
       product.type,
-
       "Darsiti Gorden",
       "Gorden Purwokerto",
       "Jasa Gorden Custom",
@@ -120,6 +117,8 @@ export default async function ProductDetailPage({
 
   return (
     <>
+      <ProductSchema product={product} />
+
       <PageHeader
         title={product.name}
         description={`Temukan informasi lengkap mengenai ${product.name}, mulai dari desain, pilihan material, keunggulan, hingga rekomendasi penggunaan untuk rumah, kantor, hotel, apartemen, sekolah, dan berbagai proyek interior lainnya.`}
