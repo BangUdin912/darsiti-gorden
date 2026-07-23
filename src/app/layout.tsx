@@ -8,6 +8,8 @@ import {
   Playfair_Display,
 } from "next/font/google";
 
+import { GoogleAnalytics } from "@next/third-parties/google";
+
 import "./globals.css";
 
 import AnnouncementBar from "@/components/layout/AnnouncementBar";
@@ -43,20 +45,20 @@ export const metadata: Metadata = {
   },
 
   description:
-    "Darsiti Gorden melayani jasa pembuatan dan pemasangan gorden custom berkualitas untuk rumah, kantor, hotel, apartemen, villa, cafe, masjid, sekolah, serta berbagai kebutuhan interior di Purwokerto dan sekitarnya.",
+    "Darsiti Gorden melayani jasa pembuatan dan pemasangan gorden custom berkualitas untuk rumah, kantor, hotel, apartemen, villa, cafe, masjid, sekolah, dan berbagai kebutuhan interior di Purwokerto serta sekitarnya.",
 
   keywords: [
     "gorden purwokerto",
-    "toko gorden terdekat",
-    "toko terdekat",
     "gorden murah purwokerto",
-    "gorden custom",
+    "gorden custom purwokerto",
     "toko gorden purwokerto",
-    "toko gorden murah",
+    "gorden minimalis purwokerto",
+    "gorden blackout purwokerto",
     "gorden rumah",
-    "gorden kantor",
-    "gorden hotel",
-    "gorden masjid",
+    "gorden ruang tamu",
+    "gorden jendela",
+    "gorden hotel purwokerto",
+    "gorden kantor purwokerto",
     "roller blind",
     "vertical blind",
     "roman blind",
@@ -70,6 +72,7 @@ export const metadata: Metadata = {
   authors: [
     {
       name: "Darsiti Gorden",
+      url: SITE_URL,
     },
   ],
 
@@ -103,9 +106,13 @@ export const metadata: Metadata = {
     address: false,
   },
 
+  /**
+   * Isi token hanya jika menggunakan HTML Verification.
+   * Jika Search Console menggunakan Domain Property (DNS),
+   * bagian ini boleh dikosongkan.
+   */
   verification: {
-    // Isi setelah website didaftarkan ke Google Search Console
-    google: "",
+    // google: "xxxxxxxxxxxxxxxxxxxx",
   },
 
   robots: {
@@ -138,11 +145,11 @@ export const metadata: Metadata = {
       "Darsiti Gorden | Spesialis Gorden Custom Purwokerto",
 
     description:
-      "Jasa pembuatan dan pemasangan gorden custom premium untuk rumah, kantor, hotel, apartemen, villa, cafe, dan masjid di Purwokerto.",
+      "Jasa pembuatan dan pemasangan gorden custom premium untuk rumah, kantor, hotel, apartemen, villa, cafe, masjid, dan sekolah di Purwokerto.",
 
     images: [
       {
-        url: "/images/og-image.jpg",
+        url: `${SITE_URL}/images/og-image.jpg`,
         width: 1200,
         height: 630,
         alt: "Darsiti Gorden Purwokerto",
@@ -160,7 +167,7 @@ export const metadata: Metadata = {
       "Jasa pembuatan dan pemasangan gorden custom premium di Purwokerto.",
 
     images: [
-      "/images/og-image.jpg",
+      `${SITE_URL}/images/og-image.jpg`,
     ],
   },
 
@@ -171,13 +178,13 @@ export const metadata: Metadata = {
       },
       {
         url: "/android-chrome-192x192.png",
-        type: "image/png",
         sizes: "192x192",
+        type: "image/png",
       },
       {
         url: "/android-chrome-512x512.png",
-        type: "image/png",
         sizes: "512x512",
+        type: "image/png",
       },
     ],
 
@@ -257,6 +264,16 @@ export default function RootLayout({
 
         {/* Footer */}
         <Footer />
+
+        {/* Google Analytics 4 */}
+        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+          <GoogleAnalytics
+            gaId={
+              process.env
+                .NEXT_PUBLIC_GA_MEASUREMENT_ID
+            }
+          />
+        )}
       </body>
     </html>
   );

@@ -22,49 +22,43 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Static Pages
   const staticPages: MetadataRoute.Sitemap = [
-    {
-      url: `${BASE_URL}`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 1,
-    },
-    {
-      url: `${BASE_URL}/about`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/products`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${BASE_URL}/material`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${BASE_URL}/gallery`,
-      lastModified: now,
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${BASE_URL}/contact`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${BASE_URL}/faq`,
-      lastModified: now,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
-  ];
+  {
+    url: BASE_URL,
+    lastModified: now,
+    changeFrequency: "weekly",
+    priority: 1,
+  },
+  {
+    url: `${BASE_URL}/about`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.8,
+  },
+  {
+    url: `${BASE_URL}/products`,
+    lastModified: now,
+    changeFrequency: "weekly",
+    priority: 0.9,
+  },
+  {
+    url: `${BASE_URL}/material`,
+    lastModified: now,
+    changeFrequency: "weekly",
+    priority: 0.9,
+  },
+  {
+    url: `${BASE_URL}/gallery`,
+    lastModified: now,
+    changeFrequency: "weekly",
+    priority: 0.9,
+  },
+  {
+    url: `${BASE_URL}/contact`,
+    lastModified: now,
+    changeFrequency: "monthly",
+    priority: 0.8,
+  },
+];
 
   // Product Pages
   const productPages: MetadataRoute.Sitemap =
@@ -76,7 +70,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.8,
     }));
-    
+
 
   // Material Pages
   const materialPages: MetadataRoute.Sitemap =
