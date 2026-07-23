@@ -65,7 +65,7 @@ export async function generateMetadata({
     ],
 
     alternates: {
-      canonical: `/product/${product.slug}`,
+      canonical: `/products/${product.slug}`,
     },
 
     robots: {
@@ -80,7 +80,7 @@ export async function generateMetadata({
     openGraph: {
       title,
       description,
-      url: `/product/${product.slug}`,
+      url: `/products/${product.slug}`,
       siteName: "Darsiti Gorden",
       locale: "id_ID",
       type: "website",

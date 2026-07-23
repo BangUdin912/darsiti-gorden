@@ -37,7 +37,7 @@ export default function ProductSchema({ product }: Props) {
 
     sku: product.id,
 
-    url: `${siteUrl}/product/${product.slug}`,
+    url: `${siteUrl}/products/${product.slug}`,
 
     manufacturer: {
       "@type": "Organization",
@@ -52,7 +52,7 @@ export default function ProductSchema({ product }: Props) {
     "@type": "PriceSpecification",
     priceCurrency: "IDR",
   },
-  url: `${siteUrl}/product/${product.slug}`,
+  url: `${siteUrl}/products/${product.slug}`,
   seller: {
     "@type": "Organization",
     name: "Darsiti Gorden",
