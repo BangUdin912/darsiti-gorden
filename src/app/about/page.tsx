@@ -9,27 +9,31 @@ import WorkProcess from "@/components/about/WorkProcess";
 import Coverage from "@/components/about/Coverage";
 import CTA from "@/components/about/CTA";
 
+const PAGE_URL = "/about";
+const HEADER_IMAGE = "/images/gallery/gordenn2.jpg";
+const OG_IMAGE = "/images/og-image.jpg";
+
 export const metadata: Metadata = {
-  title: "Tentang Kami | Darsiti Gorden",
+  title: "Tentang Kami",
 
   description:
-    "Mengenal lebih dekat Darsiti Gorden, spesialis gorden custom di Purwokerto yang melayani pembuatan dan pemasangan gorden untuk rumah, kantor, hotel, apartemen, masjid, sekolah, villa, dan berbagai kebutuhan interior.",
+    "Mengenal lebih dekat Darsiti Gorden, spesialis pembuatan dan pemasangan gorden custom berkualitas untuk rumah, kantor, hotel, apartemen, villa, masjid, sekolah, dan berbagai proyek interior di Purwokerto.",
 
   keywords: [
     "Tentang Darsiti Gorden",
     "Profil Darsiti Gorden",
-    "Gorden Purwokerto",
+    "Darsiti Gorden Purwokerto",
     "Jasa Gorden Purwokerto",
-    "Gorden Custom",
-    "Interior Rumah",
+    "Gorden Custom Purwokerto",
+    "Spesialis Gorden",
+    "Toko Gorden Purwokerto",
+    "Pembuatan Gorden",
     "Pemasangan Gorden",
-    "Gorden Hotel",
-    "Gorden Kantor",
-    "Gorden Masjid",
+    "Interior Purwokerto",
   ],
 
   alternates: {
-    canonical: "/about",
+    canonical: PAGE_URL,
   },
 
   robots: {
@@ -43,7 +47,7 @@ export const metadata: Metadata = {
     description:
       "Kenali Darsiti Gorden sebagai penyedia jasa pembuatan dan pemasangan gorden custom terpercaya di Purwokerto dengan pengalaman menangani berbagai proyek interior.",
 
-    url: "/about",
+    url: PAGE_URL,
 
     siteName: "Darsiti Gorden",
 
@@ -53,7 +57,7 @@ export const metadata: Metadata = {
 
     images: [
       {
-        url: "/images/og-image.jpg",
+        url: OG_IMAGE,
         width: 1200,
         height: 630,
         alt: "Tentang Darsiti Gorden",
@@ -69,7 +73,7 @@ export const metadata: Metadata = {
     description:
       "Kenali Darsiti Gorden sebagai penyedia jasa gorden custom terpercaya di Purwokerto.",
 
-    images: ["/images/og-image.jpg"],
+    images: [OG_IMAGE],
   },
 };
 
@@ -79,7 +83,7 @@ export default function AboutPage() {
       <PageHeader
         title="Tentang Darsiti Gorden"
         description="Mengenal lebih dekat Darsiti Gorden sebagai penyedia gorden custom berkualitas untuk rumah, kantor, hotel, apartemen, masjid, sekolah, villa, dan berbagai proyek interior di Purwokerto serta sekitarnya."
-        image="/images/og-image.jpg"
+        image={HEADER_IMAGE}
         breadcrumb={[
           {
             label: "Tentang Kami",
