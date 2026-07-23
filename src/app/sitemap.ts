@@ -76,6 +76,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.8,
     }));
+    
 
   // Material Pages
   const materialPages: MetadataRoute.Sitemap =
